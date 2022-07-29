@@ -1,5 +1,7 @@
 * /Users/torque/programs/spice-daemon/circuit_test2.asc
 V1 vin 0 PWL file=vin_input.csv
+V2 vnoise 0 PWL file=vnoise_input.csv
+R3 vnoise vin 50
 R1 N001 vin 50
 C1 N002 0 {C}
 L1 N002 N001 {L}

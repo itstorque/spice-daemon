@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 
 import os
 import sys
+import shutil
 
 from PyLTSpice.LTSpice_RawRead import RawRead
 # from PyLTSpice.LTSpiceBatch import SimCommander
@@ -15,7 +16,7 @@ def sigmoid(x):
 
 class Circuit:
     
-    T=100e-3
+    T=1#100e-3
     delta_t=0.01e-3
     samples = int(T/delta_t)
     
@@ -23,7 +24,13 @@ class Circuit:
     
     def __init__(self, netlist_file, params):
         
-        self.netlist_file = netlist_file
+        if netlist_file.split("/")[-1][0] == "_":
+            self.netlist_file = netlist_file
+        else:
+            self.netlist_file = "_"+netlist_file
+            shutil.copyfile(netlist_file, self.netlist_file)
+            
+        print(self.netlist_file)
         
         self.params = params
         
@@ -34,6 +41,15 @@ class Circuit:
     def add_input(self, node, f, t=None):
         
         time = self.time(t)
+        
+        # with open(self.netlist_file, 'r', encoding='utf-8', errors="ignore") as file:
+        #     data = file.read()
+        #     print(node, node in data)
+        #     data = data.replace(node + ' 0', node + ' 0 PWL file=' + node + '_input.csv')
+        #     print(data)
+            
+        # with open(self.netlist_file, 'w', encoding='utf-8', errors="ignore") as file:
+        #     file.write(data)
         
         self.inputs[node] = (f, time)
             
@@ -84,14 +100,12 @@ class Circuit:
             node_names = [node_names]
         
         if self.ltr == None:
-            self.ltr = RawRead("{:s}".format('circuit_test2_oop.raw'))
+            self.ltr = RawRead("{:s}".format(self.netlist_file.replace('.net', '.raw')))
             
         time = abs(self.ltr.get_trace("time").get_wave(0))
         
-        print(time)
-        
         if voltage:
-            node_names = ["V(" + node_name + ")" for node_name in node_names]
+            node_names = ["V(" + node_name + ")" if "(" not in node_name else node_name for node_name in node_names]
         
         for node_name in node_names:
             plt.plot(time, self.ltr.get_trace(node_name).get_wave(0), label=node_name)#, self.ltr.get_trace("time"))
@@ -105,15 +119,19 @@ class Circuit:
 
 if __name__=="__main__":
     
-    cir = Circuit('circuit_test2_oop.net', params={
+    cir = Circuit('circuit.net', params={
                         "C":1e-3,
                         "L":0.01
                     })
     
-    input = sigmoid((cir.time())*1000-50)#1/(1+np.exp(-(cir.time()-0.5)*100)) #1/(1 + np.exp(-time))
+    input = sigmoid((cir.time())*100-30)#1/(1+np.exp(-(cir.time()-0.5)*100)) #1/(1 + np.exp(-time))
+    noise = np.random.normal(0, 1, len(input))
+    
+    os.system("rm *_input.csv")
     
     cir.add_input('vin', input)
+    cir.add_input('vnoisy', noise)
     
     cir.run()
     
-    cir.plot(['vin', 'vout'])
+    cir.plot(['vnoisy', 'vin', 'vout'])
