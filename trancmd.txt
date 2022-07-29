@@ -1,3 +1,3 @@
 .param transtop 1.000000E-01
 .param transtart 0.000000E+00
-.param timestep 1.001001E-04
+.param timestep 1.000100E-05

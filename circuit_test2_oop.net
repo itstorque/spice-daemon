@@ -4,7 +4,7 @@ R1 N001 vin 50
 C1 N002 0 {C}
 L1 N002 N001 {L}
 R2 N002 vout 50
-.tran 0 1 0 0.001 startup
+.tran 0 {transtop} {transtart} {timestep} startup
 .include param.txt
 .include trancmd.txt
 * setup block

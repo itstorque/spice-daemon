@@ -16,7 +16,7 @@ def sigmoid(x):
 class Circuit:
     
     T=100e-3
-    delta_t=0.1e-3
+    delta_t=0.01e-3
     samples = int(T/delta_t)
     
     SPICE_CMD = '/Applications/LTspice.app/Contents/MacOS/LTspice -b '
@@ -78,22 +78,36 @@ class Circuit:
             
         os.system(self.SPICE_CMD + " {:s}".format(self.netlist_file))
         
-    def plot(self, node_name="vout", voltage=True):
+    def plot(self, node_names="vout", voltage=True):
+        
+        if type(node_names) == str:
+            node_names = [node_names]
         
         if self.ltr == None:
             self.ltr = RawRead("{:s}".format('circuit_test2_oop.raw'))
+            
+        time = abs(self.ltr.get_trace("time").get_wave(0))
+        
+        print(time)
         
         if voltage:
-            node_name = "V(" + node_name + ")"
+            node_names = ["V(" + node_name + ")" for node_name in node_names]
         
-        plt.plot(self.ltr.get_trace(node_name).get_wave(0))#, self.ltr.get_trace("time"))
+        for node_name in node_names:
+            plt.plot(time, self.ltr.get_trace(node_name).get_wave(0), label=node_name)#, self.ltr.get_trace("time"))
+        
+        
+        plt.ylabel("Voltage [V]")
+        plt.xlabel("time [s]")
+        
+        plt.legend()
         plt.show()
 
 if __name__=="__main__":
     
     cir = Circuit('circuit_test2_oop.net', params={
-                        "C":0.001, # 100 uF
-                        "L":2 # 200 mH
+                        "C":1e-3,
+                        "L":0.01
                     })
     
     input = sigmoid((cir.time())*1000-50)#1/(1+np.exp(-(cir.time()-0.5)*100)) #1/(1 + np.exp(-time))
@@ -102,18 +116,4 @@ if __name__=="__main__":
     
     cir.run()
     
-    cir.plot('vin')
-    cir.plot('vout')
-    
-    # val = ltr.get_trace("V(vout)")
-    # t = ltr.get_trace("time") 
-    
-    # #  #### the abs() is a quick and dirty fix for some strange sign decoding errors
-    # vout_x = abs(t.get_wave(0))
-    # vout_y = val.get_wave(0)
-    
-    # # plt.plot(input)
-    
-    # plt.plot(ltr.get_trace("V(vin)").get_wave(0))
-    # plt.plot(vout_y)
-    # plt.show()
+    cir.plot(['vin', 'vout'])
