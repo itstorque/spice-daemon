@@ -1,0 +1,6 @@
+[submodule "qnn-spice"]
+	path = qnn-spice
+	url = git@github.com:tareqdandachi/qnn-spice.git
+[submodule "spice-noise-daemon"]
+	path = spice-noise-daemon
+	url = git@github.com:tareqdandachi/spice-noise-daemon.git
