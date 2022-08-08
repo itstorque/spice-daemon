@@ -1,13 +1,8 @@
 #!/usr/bin/env python3
 
-import argparse
 import os
-from sys import platform
-
 import yaml
 import re
-
-import numpy as np
 
 '''
 Functions for interacting with the yaml specification files
@@ -21,7 +16,10 @@ class Element():
     def generate_asy_content(filepath, filename, params):
         pass 
 
-    def lib_generator(params):
+    def lib_generator(**params):
+        pass
+    
+    def update_PWL_file(**params):
         pass
 
 def write_yaml(noise_source_dict, dest):
