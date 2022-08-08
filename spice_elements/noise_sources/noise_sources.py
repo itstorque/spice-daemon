@@ -1,7 +1,7 @@
-from yaml_interface import *
+from ..yaml_interface import *
 import numpy as np
 
-class Noise(Element):
+class noise_sources(Element):
     
     def generate_asy_content(self, LIB_FILE, name, type="voltage"):
     

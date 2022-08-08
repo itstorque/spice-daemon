@@ -1,6 +1,6 @@
-from yaml_interface import *
+from ..yaml_interface import *
 
-class SNSPI(Element):
+class snspi(Element):
     def generate_asy_content(self, filepath, filename, params=None):
         pass 
 

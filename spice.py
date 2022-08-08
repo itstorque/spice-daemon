@@ -7,6 +7,9 @@ from sys import platform
 import numpy as np
 
 from spice_elements import yaml_interface
+from spice_elements import *
+
+print(noise_sources)
 
 DAEMON_MAIN_DIR = "spice-daemon"
 daemon_filename = "spice-daemon.yaml"
@@ -45,9 +48,9 @@ if __name__=="__main__":
     if args.setup:
         print("Setting up directory " + filepath)
         
-        os.makedirs(filepath + "/" + DAEMON_MAIN_DIR, exist_ok=True)
+        os.makedirs(DAEMON_MAIN_DIR, exist_ok=True)
         
-        new_file_loc = filepath + DAEMON_DEF_FILE
+        new_file_loc = DAEMON_DEF_FILE
         
         overwrite = True
         
@@ -63,7 +66,7 @@ if __name__=="__main__":
                 f.write("""entropy:
   T: 1
   STEPS: 1000
-sources:
+noise_sources:
   noise_source_1:
     source_type: current
     noise:
@@ -82,22 +85,28 @@ sources:
         
         lib_content = "** NOISE_Library **\n\n"
         
-        STEPS = source_data["entropy"]["STEPS"]
-        T = source_data["entropy"]["T"]
+        STEPS = source_data["sim"]["STEPS"]
+        T = source_data["sim"]["T"]
         
         t = np.linspace(0, T, STEPS)
         
         print("Generating new noise component sources...")
         
-        for source in source_data["sources"].keys():
-        
-            lib_content += lib_generator(DAEMON_FILE_DEST_PREAMBLE, source, source_symbol="v" if source_data["sources"][source]["source_type"]=="voltage" else "i")
+        for key in source_data.keys():
             
-            yaml_interface.create_asy(filepath, LIB_FILE, source, type=source_data["sources"][source]["source_type"])
+            if key != "sim":
+                
+                generator = eval(key + "()")
         
-        yaml_interface.write_lib(LIB_FILE, lib_content)
-        
-        update_noise(NOISE_FILE_DEST_PREAMBLE, t)
+                for source in source_data[key].keys():
+                
+                    lib_content += generator.lib_generator(DAEMON_FILE_DEST_PREAMBLE, source, source_symbol="v" if source_data["noise_sources"][source]["source_type"]=="voltage" else "i")
+                    
+                    yaml_interface.create_asy(filepath, LIB_FILE, source, element=generator, type=source_data["noise_sources"][source]["source_type"])
+            
+                yaml_interface.write_lib(LIB_FILE, lib_content)
+                
+                generator.update_PWL_file(DAEMON_FILE_DEST_PREAMBLE, t)
 
     if args.noise:
         

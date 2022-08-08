@@ -39,7 +39,7 @@ def write_lib(LIB_FILE, content):
         f.write(content)
         f.close()
 
-def create_asy(filepath, LIB_FILE, name, element):
+def create_asy(filepath, LIB_FILE, name, element, type):
     
     content = element.generate_asy_content(LIB_FILE, name)
     
