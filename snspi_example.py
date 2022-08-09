@@ -8,11 +8,11 @@ import yaml
 import re
 from enum import Enum, auto
 
-from spice_elements.yaml_interface import *
-from spice_elements.snspi.snspi import SNSPI
+from spice_daemon.yaml_interface import *
+from spice_daemon.snspi.snspi import SNSPI
 
-DEFAULT_SNSPI_DEF_FILE = "spice_elements/snspi/snspi.yaml"
-LIB_FILE = "spice_elements/snspi/snspi.lib"
+DEFAULT_SNSPI_DEF_FILE = "spice_daemon/snspi/snspi.yaml"
+LIB_FILE = "spice_daemon/snspi/snspi.lib"
 
 class Element_Types(Enum, str):
     SNSPI = 'snspi'
@@ -46,14 +46,14 @@ if __name__=="__main__":
     if args.setup:
         print("Setting up directory " + filepath)
         
-        os.makedirs(filepath + "/spice_elements/snspi", exist_ok=True)
+        os.makedirs(filepath + "/spice_daemon/snspi", exist_ok=True)
         
-        new_file_loc = filepath + "/spice_elements/snspi/snspi.yaml"
+        new_file_loc = filepath + "/spice_daemon/snspi/snspi.yaml"
         
         overwrite = True
         
         if os.path.exists(new_file_loc):
-            exists_string = "/spice_elements/snspi/snspi.yaml already exists, type [overwrite] to overwrite otherwise hit enter.\n    > "
+            exists_string = "/spice_daemon/snspi/snspi.yaml already exists, type [overwrite] to overwrite otherwise hit enter.\n    > "
             if input(exists_string) == "overwrite":
                 overwrite = True
             else:
