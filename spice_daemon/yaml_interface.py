@@ -13,14 +13,19 @@ class Element():
     Interface defining some necessary functions each 
     SPICE element needs to implement differently
     '''
-    def generate_asy_content(filepath, filename, params):
+    
+    def generate_asy_content(self, filepath, filename, params):
         pass 
 
-    def lib_generator(**params):
+    def lib_generator(self, **params):
         pass
     
-    def update_PWL_file(**params):
+    def update_PWL_file(self, **params):
         pass
+    
+    def load_data(self, name, data):
+        self.name = name
+        self.data = data
 
 def write_yaml(noise_source_dict, dest):
 

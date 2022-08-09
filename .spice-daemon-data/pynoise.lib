@@ -1,0 +1,7 @@
+.subckt noise_source_1 in out
+
+** NOISE SOURCE **
+v out in PWL file=/Users/torque/programs/spice-daemon/.spice-daemon-data/noise_data_noise_source_1.csv
+
+.ends noise_source_1
+
