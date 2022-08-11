@@ -17,13 +17,14 @@ class Element():
     def generate_asy_content(self, filepath, filename, params):
         pass 
 
-    def lib_generator(self, **params):
+    def lib_generator(self, *args, **kwargs):
         pass
     
-    def update_PWL_file(self, **params):
+    def update_PWL_file(self, *args, **kwargs):
         pass
     
     def load_data(self, name, data):
+        print(">>>", name)
         self.name = name
         self.data = data
 
@@ -44,7 +45,7 @@ def write_lib(LIB_FILE, content):
         f.write(content)
         f.close()
 
-def create_asy(filepath, LIB_FILE, name, element, type):
+def create_asy(filepath, LIB_FILE, name, element):
     
     content = element.generate_asy_content(LIB_FILE, name)
     

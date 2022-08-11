@@ -8,3 +8,7 @@ noise_sources:
       type: gaussian
       mean: 0
       std: 0.0000001
+taper:
+  taper_1:
+    Zin: 50
+    Zout: 1000

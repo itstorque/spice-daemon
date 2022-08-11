@@ -28,7 +28,7 @@ def update_components(source_data, daemon_file_dest_preamble, t):
     
             for source in source_data[key].keys():
                 
-                generator.load_data(source, source_data["noise_sources"][source])
+                generator.load_data(source, source_data[key][source])
             
                 lib_content += generator.lib_generator(DAEMON_FILE_DEST_PREAMBLE)
                 
@@ -118,11 +118,11 @@ noise_sources:
         
                 for source in source_data[key].keys():
                     
-                    generator.load_data(source, source_data["noise_sources"][source])
+                    generator.load_data(source, source_data[key][source])
                 
                     lib_content += generator.lib_generator(DAEMON_FILE_DEST_PREAMBLE)
                     
-                    yaml_interface.create_asy(filepath, LIB_FILE, source, element=generator, type=source_data["noise_sources"][source]["source_type"])
+                    yaml_interface.create_asy(filepath, LIB_FILE, source, element=generator)
                     
                     generator.update_PWL_file(DAEMON_FILE_DEST_PREAMBLE, t)
             

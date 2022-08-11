@@ -27,7 +27,7 @@ LINE Normal -48 0 -32 0
 ARC Normal -132 4 48 88 36 0 -36 -8
 ARC Normal -132 -88 48 -4 -36 8 36 0
 SYMATTR Prefix X
-SYMATTR Description {type.lower()} noise source
+SYMATTR Description {str(type).lower()} noise source
 SYMATTR SpiceModel {name}
 SYMATTR ModelFile {LIB_FILE}
 PIN 48 0 NONE 8
@@ -72,8 +72,8 @@ PINATTR SpiceOrder 2"""
 
     def generate_taper(self, Zin, Zout, type="klopf"):
         
-        z_file   = 'tapers_source/sonnet_csvs/Z_STO_NbN80pH_sweep.csv'
-        eps_file = 'tapers_source/sonnet_csvs/eEff_STO_NbN80pH_sweep.csv'
+        z_file   = 'spice_daemon/taper/tapers_source/sonnet_csvs/Z_STO_NbN80pH_sweep.csv'
+        eps_file = 'spice_daemon/taper/tapers_source/sonnet_csvs/eEff_STO_NbN80pH_sweep.csv'
         
         if type=="klopf": taper_geometry = TAPER_GEOM.Klopfenstein
         elif type=="erikson": taper_geometry = TAPER_GEOM.Erickson
