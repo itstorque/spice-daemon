@@ -18,7 +18,7 @@ class taper(Element):
     
     def generate_asy_content(self, LIB_FILE, name):
         
-        return f"""Version 0
+        return f"""Version 4
 SymbolType BLOCK
 LINE Normal -32 -4 -32 4
 LINE Normal 36 -24 36 24
@@ -26,6 +26,8 @@ LINE Normal 36 0 48 0
 LINE Normal -48 0 -32 0
 ARC Normal -132 4 48 88 36 0 -36 -8
 ARC Normal -132 -88 48 -4 -36 8 36 0
+TEXT -32 -16 VLeft 0 Zlow={self.data["Zlow"]}
+TEXT 32 -36 VLeft 0 Zhigh={self.data["Zhigh"]}
 SYMATTR Prefix X
 SYMATTR Description {str(type).lower()} noise source
 SYMATTR SpiceModel {name}
@@ -49,13 +51,13 @@ PINATTR SpiceOrder 2"""
         
         node_number = 0
         
-        LC = self.generate_taper(50, 1000)
+        LC = self.generate_taper(self.data["Zlow"], self.data["Zhigh"])
         
         for L, C in zip(*LC):
             
             node_number += 1
             
-            if node_number == 0:
+            if node_number == 1:
                 left_node = f"Zlow"
             else:
                 left_node = f"Nt{node_number-1}"
@@ -65,8 +67,8 @@ PINATTR SpiceOrder 2"""
             else:
                 right_node = f"Nt{node_number}"
             
-            lib = newline_join(lib, f"L{node_number} {left_node} {right_node} {L}")
-            lib = newline_join(lib, f"C{node_number} {right_node} 0 {C}")
+            lib = newline_join(lib, f"L{node_number} {left_node} {right_node} {L} Rser=1e-10 Rpar=0 Cpar=0")
+            lib = newline_join(lib, f"C{node_number} {right_node} 0 {C} Rpar=0 Cpar=0 Lser=0")
 
         return newline_join(lib, f".ends {self.name}\n\n")
 

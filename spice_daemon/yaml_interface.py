@@ -24,7 +24,6 @@ class Element():
         pass
     
     def load_data(self, name, data):
-        print(">>>", name)
         self.name = name
         self.data = data
 

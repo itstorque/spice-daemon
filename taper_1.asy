@@ -6,6 +6,8 @@ LINE Normal 36 0 48 0
 LINE Normal -48 0 -32 0
 ARC Normal -132 4 48 88 36 0 -36 -8
 ARC Normal -132 -88 48 -4 -36 8 36 0
+TEXT -32 -16 VLeft 0 Zlow=50
+TEXT 32 -36 VLeft 0 Zhigh=1000
 SYMATTR Prefix X
 SYMATTR Description <class 'type'> noise source
 SYMATTR SpiceModel taper_1

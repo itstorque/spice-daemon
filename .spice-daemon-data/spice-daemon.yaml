@@ -10,5 +10,5 @@ noise_sources:
       std: 0.0000001
 taper:
   taper_1:
-    Zin: 50
-    Zout: 1000
+    Zlow: 50
+    Zhigh: 1000
