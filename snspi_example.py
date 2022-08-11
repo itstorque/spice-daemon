@@ -62,21 +62,21 @@ if __name__=="__main__":
         if overwrite:
             with open(new_file_loc, "w") as f:
                 f.write("""elements:
-                            snspi_1:
-                                element_type: snpsi
-                                parameters:
-                                    phase_velocity: 0.05*3E8
-                                    length: 100E-6
-                                    num_pixels: 100
-                                    snspd_params:
-                                    Lind: 100E-9
-                                    width: 100E-9
-                                    thickness: 4E-9
-                                    sheetRes: 400
-                                    Tc: 10.5
-                                    Tsub: 2
-                                    Jc: 50E9
-                                    C: 1
+    snspi_1:
+        element_type: snpsi
+        parameters:
+            phase_velocity: 0.05*3E8
+            length: 100E-6
+            num_pixels: 100
+            snspd_params:
+            Lind: 100E-9
+            width: 100E-9
+            thickness: 4E-9
+            sheetRes: 400
+            Tc: 10.5
+            Tsub: 2
+            Jc: 50E9
+            C: 1
                             """)
                 f.close()
     
@@ -94,7 +94,7 @@ if __name__=="__main__":
         for element in element_data["elements"].keys():
         
             if element_data["elements"][element]["element_type"] == Element_Types.SNSPI:
-                lib_content += SNSPI.lib_generator(element_data["elements"][element]["parameters"])
+                lib_content += SNSPI.lib_generator(element, element_data["elements"][element]["parameters"])
             
                 create_asy(filepath, LIB_FILE, element, SNSPI)
         
