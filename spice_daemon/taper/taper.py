@@ -6,9 +6,9 @@ from enum import Enum
 from scipy import constants
 from scipy.interpolate import interp1d
 
-from tapers_source.taper_helpers.erickson_taper import length, erickson_polynomial_z
-from tapers_source.taper_helpers.klopfenstein_taper import klop_length, klopfenstein_z
-from tapers_source.taper_helpers.taper_library import *
+# from tapers_source.taper_helpers.erickson_taper import length, erickson_polynomial_z
+from .tapers_source.taper_helpers.klopfenstein_taper import klop_length, klopfenstein_z
+from .tapers_source.taper_helpers.taper_library import *
 
 class TAPER_GEOM(Enum):
     Erickson = 0
@@ -38,16 +38,42 @@ PINATTR PinName out
 PINATTR SpiceOrder 2"""
 
     def lib_generator(self, NOISE_FILE_DEST_PREAMBLE):
-    
-        return f"""
-"""
+        
+        # TODO: remove resistance of L, C
+        
+        # if self.num_units < 2: raise Exception # do we use num_units?
+        
+        newline_join = lambda s1, s2: s1 +"\n" + s2
+        
+        lib = newline_join(f".subckt {self.name} Zlow Zhigh", "** TAPER **")
+        
+        node_number = 0
+        
+        LC = self.generate_taper(50, 1000)
+        
+        for L, C in zip(*LC):
+            
+            node_number += 1
+            
+            if node_number == 0:
+                left_node = f"Zlow"
+            else:
+                left_node = f"Nt{node_number-1}"
+            
+            if node_number == len(LC[0]):
+                right_node = f"Zhigh"
+            else:
+                right_node = f"Nt{node_number}"
+            
+            lib = newline_join(lib, f"L{node_number} {left_node} {right_node} {L}")
+            lib = newline_join(lib, f"C{node_number} {right_node} 0 {C}")
+
+        return newline_join(lib, f".ends {self.name}\n\n")
 
     def generate_taper(self, Zin, Zout, type="klopf"):
         
-        return 
-        
-        z_file = 'sonnet_csvs/Z_STO_NbN80pH_sweep.csv'
-        eps_file = 'sonnet_csvs/eEff_STO_NbN80pH_sweep.csv'
+        z_file   = 'tapers_source/sonnet_csvs/Z_STO_NbN80pH_sweep.csv'
+        eps_file = 'tapers_source/sonnet_csvs/eEff_STO_NbN80pH_sweep.csv'
         
         if type=="klopf": taper_geometry = TAPER_GEOM.Klopfenstein
         elif type=="erikson": taper_geometry = TAPER_GEOM.Erickson
@@ -105,6 +131,14 @@ PINATTR SpiceOrder 2"""
 
         dlmd0 = total_length/sections # length per section [m]
         
-        w_design = wsim_interp(Z_target)
+        if Z_target[0] > Z_target[-1]:
+            Z_target = np.flip(Z_target)
         
+        n_target = nsim_interp(Z_target)
         
+        v_target = n_target * constants.c
+        
+        L = Z_target / v_target
+        C = 1 / (Z_target * v_target)
+        
+        return L, C
