@@ -8,6 +8,8 @@ class noise_sources(Element):
         
         type = self.data['source_type']
     
+        # draw top right glyph indicatin directionality and
+        # V or I source
         if type=="current":
             accent = """LINE Normal 32 0 32 16
 LINE Normal 32 0 36 8
@@ -19,6 +21,7 @@ LINE Normal 28 16 36 16"""
         else: 
             raise TypeError
         
+        # actual file content
         return f"""Version 4
 SymbolType CELL
 LINE Normal 0 80 0 72

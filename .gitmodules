@@ -1,3 +1,6 @@
 [submodule "spice-noise-daemon"]
 	path = spice-noise-daemon
 	url = git@github.com:tareqdandachi/spice-noise-daemon.git
+[submodule "spice_daemon/taper/tapers"]
+	path = spice_daemon/taper/tapers_source
+	url = git@github.com:qnngroup/tapers.git
