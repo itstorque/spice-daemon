@@ -6,8 +6,8 @@ from sys import platform
 
 import numpy as np
 
-from spice_daemon import yaml_interface
-from spice_daemon import *
+from helpers import yaml_interface
+from modules import *
 
 DAEMON_MAIN_DIR = ".spice-daemon-data"
 daemon_filename = "spice-daemon.yaml"

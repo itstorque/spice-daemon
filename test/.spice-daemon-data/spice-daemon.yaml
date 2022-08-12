@@ -1,0 +1,18 @@
+sim:
+  T: 0.2e-6
+  STEPS: 200000
+noise_sources:
+  noise_source_1:
+    source_type: current
+    noise:
+      type: gaussian
+      mean: 0
+      std: 1e-7
+taper:
+  taper_1:
+    type: klopf
+    num_units: 1000
+    Zlow: 50
+    Zhigh: 1000
+    z_file: modules/taper/tapers_source/sonnet_csvs/Z_60pH-g=3.csv
+    eps_file: modules/taper/tapers_source/sonnet_csvs/eEff_60pH-g=3.csv

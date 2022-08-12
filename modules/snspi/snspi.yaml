@@ -1,0 +1,16 @@
+snspi:
+  snspi_1:
+    element_type: snpsi
+    parameters:
+      phase_velocity: 0.05*3E8
+      length: 100E-6
+      num_pixels: 100
+      snspd_params:
+        Lind: 100E-9
+        width: 100E-9
+        thickness: 4E-9
+        sheetRes: 400
+        Tc: 10.5
+        Tsub: 2
+        Jc: 50E9
+        C: 1

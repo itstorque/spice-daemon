@@ -1,6 +1,0 @@
-tapers:
-  taper_1:
-    num_units: 1000
-    type: klopf
-    Zin: 1000
-    Zout: 50
