@@ -1,14 +1,18 @@
 from helpers.yaml_interface import *
 
+import sys
+
 import numpy as np
 from enum import Enum
 
 from scipy import constants
 from scipy.interpolate import interp1d
 
-from tapers_source.taper_helpers.erickson_taper import length, erickson_polynomial_z
-from .tapers_source.taper_helpers.klopfenstein_taper import klop_length, klopfenstein_z
-from .tapers_source.taper_helpers.taper_library import *
+sys.path.insert(0, "modules/taper/tapers_source")
+
+from taper_helpers.erickson_taper import length, erickson_polynomial_z
+from taper_helpers.klopfenstein_taper import klop_length, klopfenstein_z
+from taper_helpers.taper_library import *
 
 class TAPER_GEOM(Enum):
     Erickson = 0
@@ -79,13 +83,6 @@ PINATTR SpiceOrder 2"""
         elif type=="erikson": taper_geometry = TAPER_GEOM.Erickson
         else: raise NotImplementedError
         
-        # set calculation parameters
-
-        # geometric params
-        # bending_radius_factor = 3
-        # gap = 1 # [um]
-        # w0 = 0.1 # initial width of device [um]
-        # lmax = 2500 # maximum length before turning [um]
         if self.data['type'] == 'erikson':
             N = self.data['erikson_poly_order'] # polynomial order for Erickson taper
         sections = self.data['num_units'] # number of sections
@@ -98,7 +95,7 @@ PINATTR SpiceOrder 2"""
         Zmatch = Zin
 
         # must set this if using Klopfenstein taper!
-        RdB = -20 # operating band ripple [dB]
+        RdB = self.data['klopf_op_band_ripple'] # operating band ripple [dB]
 
         # read Z(w), eps(w) directly from Sonnet CSVs
         wsim, Zsim, gs = read_sonnet_csv(z_file)
