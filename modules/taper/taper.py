@@ -6,7 +6,7 @@ from enum import Enum
 from scipy import constants
 from scipy.interpolate import interp1d
 
-# from tapers_source.taper_helpers.erickson_taper import length, erickson_polynomial_z
+from tapers_source.taper_helpers.erickson_taper import length, erickson_polynomial_z
 from .tapers_source.taper_helpers.klopfenstein_taper import klop_length, klopfenstein_z
 from .tapers_source.taper_helpers.taper_library import *
 
@@ -86,14 +86,12 @@ PINATTR SpiceOrder 2"""
         # gap = 1 # [um]
         # w0 = 0.1 # initial width of device [um]
         # lmax = 2500 # maximum length before turning [um]
-        N = 2 # polynomial order for Erickson taper
+        if self.data['type'] == 'erikson':
+            N = self.data['erikson_poly_order'] # polynomial order for Erickson taper
         sections = self.data['num_units'] # number of sections
 
         # design frequencies
-        Fc = 500 # lower cut-off frequency [MHz]
-        F1 = 50 # start frequency for response plot [MHz]
-        F2 = 20000 # stop frequency for response plot [MHz]
-        num_freq_points = 1000
+        Fc = self.data['Fc'] # lower cut-off frequency [MHz]
 
         # matching params
         epsilon2 = constants.epsilon_0*10

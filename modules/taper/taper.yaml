@@ -4,3 +4,7 @@ tapers:
     type: klopf
     Zin: 1000
     Zout: 50
+    Fc: 500
+    erikson_poly_order: 2 # if erikson taper
+    z_file: modules/taper/tapers_source/sonnet_csvs/Z_60pH-g=3.csv
+    eps_file: modules/taper/tapers_source/sonnet_csvs/eEff_60pH-g=3.csv

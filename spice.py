@@ -150,20 +150,6 @@ if __name__=="__main__":
     
     asc_file = f"{filepath}{filename}.{file_extension}"
     
-    # with open(asc_file, 'rb') as f:
-        
-    #     k = f.read()
-        
-    #     print(k)
-        
-    #     # print('Version'.encode('utf_16_le'))
-        
-    #     print('Version'.encode('utf_16_le') in k[:20])
-        
-    #     print('Version'.encode('utf_8') in k[:20])
-    
-    # raise Exception
-    
     if platform != "linux":
         # wine doesn't like absolute paths, so just use the relative path spice_daemon/
         DAEMON_FILE_DEST_PREAMBLE = filepath + DAEMON_FILE_DEST_PREAMBLE
