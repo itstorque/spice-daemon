@@ -1,3 +1,4 @@
-.param transtop 1.000000E-3
-.param transtart 0.000000E+00
-.param timestep 1.000020E-05
+.param T 2e-07
+.param STEPS 200000
+.param Tstop 2e-07
+.param STEPSIZE 1e-12

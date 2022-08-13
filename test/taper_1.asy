@@ -11,7 +11,7 @@ TEXT 32 -36 VLeft 0 Zlow=50
 SYMATTR Prefix X
 SYMATTR Description <class 'type'> noise source
 SYMATTR SpiceModel taper_1
-SYMATTR ModelFile /Users/torque/programs/spice-daemon/test/.spice-daemon-data/pynoise.lib
+SYMATTR ModelFile /Users/torque/programs/spice-daemon/test/.spice-daemon-data/spice-daemon.lib
 PIN 48 0 NONE 8
 PINATTR PinName in
 PINATTR SpiceOrder 1

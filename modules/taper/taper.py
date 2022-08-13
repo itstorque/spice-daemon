@@ -141,7 +141,4 @@ PINATTR SpiceOrder 2"""
         L = Z_target / v_target / self.data['num_units']
         C = 1 / (Z_target * v_target) / self.data['num_units']
         
-        print(Z_target[0], Z_target[-1])
-        print(np.sqrt(L[0]/C[0]), np.sqrt(L[-1]/C[-1]))
-        
         return L, C
