@@ -16,5 +16,5 @@ taper:
     Zhigh: 1000
     Fc: 500
     klopf_op_band_ripple: -20
-    z_file: modules/taper/tapers_source/sonnet_csvs/Z_60pH-g=3.csv
-    eps_file: modules/taper/tapers_source/sonnet_csvs/eEff_60pH-g=3.csv
+    z_file: /Users/torque/programs/spice-daemon/modules/taper/tapers_source/sonnet_csvs/Z_60pH-g=3.csv
+    eps_file: /Users/torque/programs/spice-daemon/modules/taper/tapers_source/sonnet_csvs/eEff_60pH-g=3.csv
