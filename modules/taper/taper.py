@@ -8,7 +8,7 @@ from enum import Enum
 from scipy import constants
 from scipy.interpolate import interp1d
 
-sys.path.insert(0, "modules/taper/tapers_source")
+sys.path.insert(0, os.path.dirname(os.path.realpath(__file__)) + "/tapers_source")
 
 from taper_helpers.erickson_taper import length, erickson_polynomial_z
 from taper_helpers.klopfenstein_taper import klop_length, klopfenstein_z
@@ -33,7 +33,7 @@ ARC Normal -132 -88 48 -4 -36 8 36 0
 TEXT -32 -16 VLeft 0 Zhigh={self.data["Zhigh"]}
 TEXT 32 -36 VLeft 0 Zlow={self.data["Zlow"]}
 SYMATTR Prefix X
-SYMATTR Description {str(type).lower()} noise source
+SYMATTR Description {self.data['type'].capitalize()} Impedance Matched Taper
 SYMATTR SpiceModel {name}
 SYMATTR ModelFile {LIB_FILE}
 PIN 48 0 NONE 8
