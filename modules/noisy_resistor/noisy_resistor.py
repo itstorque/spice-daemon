@@ -1,6 +1,7 @@
 from helpers.yaml_interface import *
 import numpy as np
 import colorednoise as cn
+from scipy import constants
 
 from modules.noise_sources.noise_sources import *
 
@@ -31,7 +32,6 @@ ARC Normal -44 24 -28 40 -28 32 -44 28
 ARC Normal -28 24 -12 40 -28 32 -12 36
 WINDOW 0 36 40 Left 2
 WINDOW 3 36 76 Left 2
-SYMATTR Value R
 SYMATTR Prefix X
 SYMATTR SpiceModel {name}
 SYMATTR ModelFile {LIB_FILE}
@@ -46,12 +46,20 @@ PINATTR SpiceOrder 2
 
     def lib_generator(self, NOISE_FILE_DEST_PREAMBLE):
 
-        return
-        
-    def save_noise(self, NOISE_FILE_DEST_PREAMBLE, noise, t):
+        return f""".subckt {self.name} A B
 
-        return
-        
+** NOISE SOURCE **
+V temp A PWL file={NOISE_FILE_DEST_PREAMBLE}{self.name}.csv
+R B temp {self.data["resistance"]}
+
+.ends {self.name}
+
+"""
+    
     def update_PWL_file(self, NOISE_FILE_DEST_PREAMBLE, t):
-                
-        return
+        
+        vn = np.sqrt(4 * constants.k * self.data["temperature"] * self.data["resistance"] * self.data["bandwidth"])
+        
+        noise = np.random.normal(0, vn, len(t))
+        
+        return self.save_noise(NOISE_FILE_DEST_PREAMBLE, noise, t)
