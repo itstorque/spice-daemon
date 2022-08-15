@@ -8,7 +8,7 @@ LINE Normal 0 0 0 8
 CIRCLE Normal -32 8 32 72
 TEXT 0 40 Center 0 noise_source_1
 SYMATTR Prefix X
-SYMATTR Description current noise source
+SYMATTR Description Current Noise Source
 SYMATTR SpiceModel noise_source_1
 SYMATTR ModelFile /Users/torque/programs/spice-daemon/test/.spice-daemon-data/spice-daemon.lib
 PIN 0 0 NONE 8

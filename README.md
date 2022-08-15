@@ -18,3 +18,4 @@ TODOs:
 - Johnson noise in noisy_resistor
 - check blog...
 - only update on change for non-entropic things
+- default values

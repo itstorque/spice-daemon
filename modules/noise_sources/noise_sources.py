@@ -30,7 +30,7 @@ LINE Normal 0 0 0 8
 CIRCLE Normal -32 8 32 72
 TEXT 0 40 Center 0 {name}
 SYMATTR Prefix X
-SYMATTR Description {type.lower()} noise source
+SYMATTR Description {type.capitalize()} Noise Source
 SYMATTR SpiceModel {name}
 SYMATTR ModelFile {LIB_FILE}
 PIN 0 0 NONE 8
@@ -54,18 +54,6 @@ PINATTR SpiceOrder 2
 
 """
         
-    def save_noise(self, NOISE_FILE_DEST_PREAMBLE, noise, t):
-
-        with open(NOISE_FILE_DEST_PREAMBLE + self.name + ".csv", "w") as f:
-        
-            # set initial noise to zero to have a consistent DC operating point
-            noise[0] = 0
-
-            for i in range(0,len(t)):
-                f.write("{:E}\t{:E}\n".format( t[i], noise[i] ))
-                
-            f.close()
-        
     def update_PWL_file(self, NOISE_FILE_DEST_PREAMBLE, t):
                 
         noise_data = self.data["noise"]
@@ -74,31 +62,25 @@ PINATTR SpiceOrder 2
             
             noise = np.random.normal(noise_data["mean"], noise_data["std"], len(t))
             
-            self.save_noise(NOISE_FILE_DEST_PREAMBLE, noise, t)
-            
         elif noise_data["type"] == "poisson":
             
             noise = noise_data["scale"] * np.random.poisson(noise_data["lambda"], len(t))
-            
-            self.save_noise(NOISE_FILE_DEST_PREAMBLE, noise, t)
             
         elif noise_data["type"] == "one_over_f":
             
             noise = noise_data["scale"] * cn.powerlaw_psd_gaussian(noise_data["power"], len(t), fmin=noise_data["fmin"])
             
-            self.save_noise(NOISE_FILE_DEST_PREAMBLE, noise, t)
-            
         elif noise_data["type"] == "custom":
             
             # This definition is not redundant. `.yaml` file can define
             # custom expressions that generate noise for N steps
-            # and this needs to be defined then.
+            # and this needs to be defined here for the eval command.
             N = len(t)
         
             noise = eval(noise_data["command"])
-            
-            self.save_noise(NOISE_FILE_DEST_PREAMBLE, noise, t)
         
         else:
             print("Wrong noise type defined in .yaml file")
             raise TypeError
+        
+        return self.save_noise(NOISE_FILE_DEST_PREAMBLE, noise, t)

@@ -7,7 +7,7 @@ noise_sources:
     noise:
       type: gaussian
       mean: 0
-      std: 0.001
+      std: 0.001 # 1e-9
 taper:
   taper_1:
     type: klopf
@@ -18,3 +18,6 @@ taper:
     klopf_op_band_ripple: -20
     z_file: /Users/torque/programs/spice-daemon/modules/taper/tapers_source/sonnet_csvs/Z_60pH-g=3.csv
     eps_file: /Users/torque/programs/spice-daemon/modules/taper/tapers_source/sonnet_csvs/eEff_60pH-g=3.csv
+# noisy_resistor:
+#   johnson_res_1:
+#     R: 50

@@ -26,6 +26,18 @@ class Element():
     def load_data(self, name, data):
         self.name = name
         self.data = data
+        
+    def save_noise(self, NOISE_FILE_DEST_PREAMBLE, noise, t):
+
+        with open(NOISE_FILE_DEST_PREAMBLE + self.name + ".csv", "w") as f:
+        
+            # set initial noise to zero to have a consistent DC operating point
+            noise[0] = 0
+
+            for i in range(0,len(t)):
+                f.write("{:E}\t{:E}\n".format( t[i], noise[i] ))
+                
+            f.close()
 
 def write_yaml(noise_source_dict, dest):
 

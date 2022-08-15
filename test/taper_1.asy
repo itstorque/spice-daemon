@@ -9,7 +9,7 @@ ARC Normal -132 -88 48 -4 -36 8 36 0
 TEXT -32 -16 VLeft 0 Zhigh=1000
 TEXT 32 -36 VLeft 0 Zlow=50
 SYMATTR Prefix X
-SYMATTR Description Klopf Impedance Matching Taper
+SYMATTR Description Klopf Impedance Matched Taper
 SYMATTR SpiceModel taper_1
 SYMATTR ModelFile /Users/torque/programs/spice-daemon/test/.spice-daemon-data/spice-daemon.lib
 PIN 48 0 NONE 8
