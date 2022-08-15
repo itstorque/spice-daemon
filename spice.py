@@ -2,12 +2,14 @@
 
 import argparse
 import os
+import time
 from sys import platform
 
 import numpy as np
 
 from helpers import yaml_interface
 from helpers.open_ltspice_file import *
+from helpers.file_interface import File
 from modules import *
 
 DAEMON_MAIN_DIR = ".spice-daemon-data"
@@ -107,7 +109,7 @@ def setup_tran_statement(file):
     with open(file, 'wb') as f:
         f.write(filedata)
 
-def update_components(source_data, daemon_file_dest_preamble, t):
+def update_components(source_data, daemon_file_dest_preamble, t, spec_changed=False):
     
     lib_content = ""
     
@@ -119,13 +121,20 @@ def update_components(source_data, daemon_file_dest_preamble, t):
     
             for source in source_data[key].keys():
                 
-                generator.load_data(source, source_data[key][source])
-            
-                lib_content += generator.lib_generator(DAEMON_FILE_DEST_PREAMBLE)
+                if not spec_changed:
+                    generator.load_data(source, source_data[key][source])
+                    
+                    generator.update_PWL_file(DAEMON_FILE_DEST_PREAMBLE, t)
+                    
+                else:
                 
-                generator.update_PWL_file(DAEMON_FILE_DEST_PREAMBLE, t)
+                    generator.load_data(source, source_data[key][source])
+                
+                    lib_content += generator.lib_generator(DAEMON_FILE_DEST_PREAMBLE)
+                    
+                    generator.update_PWL_file(DAEMON_FILE_DEST_PREAMBLE, t)
         
-            yaml_interface.write_lib(LIB_FILE, lib_content)
+            if spec_changed: yaml_interface.write_lib(LIB_FILE, lib_content)
 
 if __name__=="__main__":
     
@@ -233,57 +242,65 @@ noise_sources:
             
                 yaml_interface.write_lib(LIB_FILE, lib_content)
 
+    log_file = File(filepath + filename + ".log", platform, force_run_spice_if_fail=f"{filepath}{filename}.{file_extension}")
+    def_file = File(DAEMON_DEF_FILE, platform)
+
     if args.daemon:
         
-        import time, os.path
+        # import time, os.path
         
-        try:
-            seed_time = os.path.getmtime(filepath + filename + ".log")
+        # try:
+        #     seed_time = os.path.getmtime(filepath + filename + ".log")
             
-        except FileNotFoundError as e:
+        # except FileNotFoundError as e:
             
-            if platform == "darwin":
-                os.system(f"/Applications/LTspice.app/Contents/MacOS/LTspice -b {filepath}{filename}.{file_extension} & open " + f"{filepath}{filename}.{file_extension}")
+        #     if platform == "darwin":
+        #         os.system(f"/Applications/LTspice.app/Contents/MacOS/LTspice -b {filepath}{filename}.{file_extension} & open " + f"{filepath}{filename}.{file_extension}")
                 
-            else:
+        #     else:
                 
-                print("Could not find log file.")
-                print("Make sure that the supplied file exists and make sure it is launched.")
+        #         print("Could not find log file.")
+        #         print("Make sure that the supplied file exists and make sure it is launched.")
                 
-                raise FileNotFoundError
+        #         raise FileNotFoundError
             
-        seed_time = os.path.getmtime(filepath + filename + ".log")
-        yaml_sources_time = os.path.getmtime(DAEMON_DEF_FILE)
+        # seed_time = os.path.getmtime(filepath + filename + ".log")
+        # yaml_sources_time = os.path.getmtime(DAEMON_DEF_FILE)
         
         print("Launched noise daemon... Use LTSpice normally now :)")
         
         while True:
             
-            time.sleep(1)
-        
-            source_data = yaml_interface.load_yaml(DAEMON_DEF_FILE)
-            
-            STEPS = source_data["sim"]["STEPS"]
-            T = source_data["sim"]["T"]
-            
-            write_tran_cmd(source_data['sim'], DAEMON_TRAN_FILE)
-            
-            t = np.linspace(0, T, STEPS)
-            
             try:
-                
-                spec_file_change = os.path.getmtime(DAEMON_DEF_FILE) > yaml_sources_time
             
-                if os.path.getmtime(filepath + filename + ".log") > seed_time or spec_file_change:
-                    
-                    seed_time = os.path.getmtime(filepath + filename + ".log")
-                    if spec_file_change: yaml_sources_time = os.path.getmtime(DAEMON_DEF_FILE)
-                    
-                    update_components(source_data, DAEMON_FILE_DEST_PREAMBLE, t)
-                    
-            except FileNotFoundError as e:
+                time.sleep(1)
+            
+                source_data = def_file.load_yaml() #yaml_interface.load_yaml(DAEMON_DEF_FILE)
                 
-                if seed_time != None:
+                STEPS = source_data["sim"]["STEPS"]
+                T = source_data["sim"]["T"]
+                
+                write_tran_cmd(source_data['sim'], DAEMON_TRAN_FILE)
+                
+                t = np.linspace(0, T, STEPS)
+                
+                try:
+                
+                    if log_file.did_change():
+                        
+                        update_components(source_data, DAEMON_FILE_DEST_PREAMBLE, t, spec_changed=def_file.did_content_change())
+                        
+                    elif def_file.did_content_change():
+                        
+                        update_components(source_data, DAEMON_FILE_DEST_PREAMBLE, t, spec_changed=False)
+                        
+                except FileNotFoundError as e:
+                    
                     print("LTSpice closed, killing daemon")
+                    
+                    break
                 
-                break
+            except Exception as e:
+                
+                print("SPICE DAEMON FAILED:") 
+                print(e)
