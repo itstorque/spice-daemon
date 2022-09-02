@@ -3,3 +3,5 @@
 *.raw
 _*.net
 *_input.csv
+__pycache__
+*.fft

@@ -38,6 +38,9 @@ class Element():
                 f.write("{:E}\t{:E}\n".format( t[i], noise[i] ))
                 
             f.close()
+            
+    def newline_join(self, s1, s2): 
+        return s1 + "\n" + s2
 
 def write_yaml(noise_source_dict, dest):
 

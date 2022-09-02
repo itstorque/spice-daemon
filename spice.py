@@ -30,6 +30,10 @@ def write_tran_cmd(data, dir):
     for key in data.keys():
         body += ".param " + key + " " + str(data[key]) + "\n"
         
+    body += """
+    .options reltol 1e-6
+    """
+        
     with open(dir, 'w') as f:
         f.write(body)
 

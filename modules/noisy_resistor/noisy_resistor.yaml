@@ -4,4 +4,4 @@ noise_sources:
     noise:
       type: gaussian
       mean: 0
-      std: 0.0000001
+      std: 0.1e-6

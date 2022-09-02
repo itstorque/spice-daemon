@@ -1,4 +1,4 @@
 .param T 3e-09
-.param STEPS 1000
+.param STEPS 1
 .param Tstop 3e-09
-.param STEPSIZE 3e-12
+.param STEPSIZE 3e-09

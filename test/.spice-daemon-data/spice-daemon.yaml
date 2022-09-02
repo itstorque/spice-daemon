@@ -1,13 +1,13 @@
 sim:
   T: 3e-9
-  STEPS: 1000
+  STEPS: 1 #1000
 noise_sources:
   noise_source_1:
     source_type: current
     noise:
-      type: gaussian
+      type: custom
       mean: 0
-      std: 0.001 # 1e-9
+      std: 0 #0.001 # 1e-9
 taper:
   taper_1:
     type: klopf
@@ -23,3 +23,9 @@ noisy_resistor:
     resistance: 50
     temperature: 1
     bandwidth: 50e9
+dtline:
+  dtline_1:
+readout:
+  PCR:
+    out: "pcr_out"
+    i_bias: "I1"

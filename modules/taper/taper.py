@@ -1,4 +1,5 @@
 from helpers.yaml_interface import *
+from modules.dtline.dtline import dtline
 
 import sys
 
@@ -18,7 +19,7 @@ class TAPER_GEOM(Enum):
     Erickson = 0
     Klopfenstein = 1
 
-class taper(Element):
+class taper(dtline):
     
     def generate_asy_content(self, LIB_FILE, name):
         
@@ -47,32 +48,11 @@ PINATTR SpiceOrder 2"""
         
         # TODO: remove resistance of L, C
         
-        newline_join = lambda s1, s2: s1 +"\n" + s2
-        
-        lib = newline_join(f".subckt {self.name} Zlow Zhigh", "** TAPER **")
-        
-        node_number = 0
+        lib = self.newline_join(f".subckt {self.name} Zlow Zhigh", "** TAPER **")
         
         LC = self.generate_taper(self.data["Zlow"], self.data["Zhigh"], type=self.data["type"])
         
-        for L, C in zip(*LC):
-            
-            node_number += 1
-            
-            if node_number == 1:
-                left_node = f"Zlow"
-            else:
-                left_node = f"Nt{node_number-1}"
-            
-            if node_number == len(LC[0]):
-                right_node = f"Zhigh"
-            else:
-                right_node = f"Nt{node_number}"
-            
-            lib = newline_join(lib, f"L{node_number} {left_node} {right_node} {L} Rser=1e-10 Rpar=0 Cpar=0")
-            lib = newline_join(lib, f"C{node_number} {right_node} 0 {C} Rpar=0 Cpar=0 Lser=0")
-
-        return newline_join(lib, f".ends {self.name}\n\n")
+        return self._lib_generator_helper(lib, LC=LC)
 
     def generate_taper(self, Zin, Zout, type="klopf"):
         

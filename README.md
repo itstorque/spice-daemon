@@ -12,6 +12,8 @@ Add to path so you can run it anywhere using: `sudo ln -s $PWD/spice.py /usr/loc
 
 - numpy
 - colorednoise
+- pyyaml
+- scipy
 
 TODOs: 
 - integrate spice-noise-daemon git submodule properly...
@@ -19,3 +21,4 @@ TODOs:
 - check blog...
 - only update on change for non-entropic things
 - default values
+- should we migrate to deparable variables? I.e. generate gaussian dist w/o mu + sigma then feed those through the LTSpice UI? This also affects johnson noise, etc. What is the vision for this?

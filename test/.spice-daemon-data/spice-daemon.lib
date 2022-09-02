@@ -2008,10 +2008,7 @@ C998 Nt998 0 2.9453232730943324e-16 Rpar=0 Cpar=0 Lser=0
 L999 Nt998 Nt999 2.395870190467949e-10 Rser=1e-10 Rpar=0 Cpar=0
 C999 Nt999 0 2.9399529212790294e-16 Rpar=0 Cpar=0 Lser=0
 L1000 Nt999 Zhigh 2.397105090763252e-10 Rser=1e-10 Rpar=0 Cpar=0
-C1000 Zhigh 0 2.9346219782522155e-16 Rpar=0 Cpar=0 Lser=0
-.ends taper_1
-
-.subckt johnson_res_1 A B
+C1000 Zhigh 0 2.9346219782522155e-16 Rpar=0 Cpar=0 Lser=0.subckt johnson_res_1 A B
 
 ** NOISE SOURCE **
 V temp A PWL file=/Users/torque/programs/spice-daemon/test/.spice-daemon-data/noise_data_johnson_res_1.csv
