@@ -5,7 +5,7 @@ noise_sources:
   noise_source_1:
     source_type: current
     noise:
-      type: custom
+      type: gaussian
       mean: 0
       std: 0 #0.001 # 1e-9
 taper:

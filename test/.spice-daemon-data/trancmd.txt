@@ -2,3 +2,6 @@
 .param STEPS 1
 .param Tstop 3e-09
 .param STEPSIZE 3e-09
+
+    .options reltol 1e-6
+    

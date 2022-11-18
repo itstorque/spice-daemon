@@ -116,4 +116,7 @@ PINATTR SpiceOrder 2"""
         L = Z_target / v_target / self.data['num_units']
         C = 1 / (Z_target * v_target) / self.data['num_units']
         
+        print("WOOT")
+        print(L, C)
+        
         return L, C
