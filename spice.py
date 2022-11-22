@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-
+import traceback
 import argparse
 import os
 import time
@@ -11,6 +11,7 @@ from helpers import yaml_interface
 from helpers.open_ltspice_file import *
 from helpers.file_interface import File
 from modules import *
+from toolkit import *
 
 DAEMON_MAIN_DIR = ".spice-daemon-data"
 daemon_filename = "spice-daemon.yaml"
@@ -113,7 +114,7 @@ def setup_tran_statement(file):
     with open(file, 'wb') as f:
         f.write(filedata)
 
-def update_components(source_data, daemon_file_dest_preamble, t, spec_changed=False):
+def update_components(source_data, daemon_file_dest_preamble, t, spec_changed=False, extensionless_file=None):
     
     lib_content = ""
     
@@ -122,6 +123,10 @@ def update_components(source_data, daemon_file_dest_preamble, t, spec_changed=Fa
         if key != "sim":
             
             generator = eval(key + "()")
+            
+            print(key)
+            if key == "postprocessing":
+                generator.path = extensionless_file
     
             for source in source_data[key].keys():
                 
@@ -292,11 +297,11 @@ noise_sources:
                 
                     if log_file.did_change():
                         
-                        update_components(source_data, DAEMON_FILE_DEST_PREAMBLE, t, spec_changed=def_file.did_content_change())
+                        update_components(source_data, DAEMON_FILE_DEST_PREAMBLE, t, spec_changed=def_file.did_content_change(), extensionless_file=filepath+filename)
                         
                     elif def_file.did_content_change():
                         
-                        update_components(source_data, DAEMON_FILE_DEST_PREAMBLE, t, spec_changed=False)
+                        update_components(source_data, DAEMON_FILE_DEST_PREAMBLE, t, spec_changed=False, extensionless_file=filepath+filename)
                         
                 except FileNotFoundError as e:
                     
@@ -305,6 +310,8 @@ noise_sources:
                     break
                 
             except Exception as e:
+                
+                traceback.print_exc()
                 
                 print("SPICE DAEMON FAILED:") 
                 print(e)
