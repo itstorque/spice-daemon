@@ -25,7 +25,8 @@ noisy_resistor:
     bandwidth: 50e9
 dtline:
   dtline_1:
-readout:
-  PCR:
-    out: "pcr_out"
-    i_bias: "I1"
+postprocessing:
+  PSD:
+    out: "pcr_outa"
+    trace: "I(R9)"
+    gui: true
