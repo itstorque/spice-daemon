@@ -1,10 +1,11 @@
 import os
 from helpers import yaml_interface
 import hashlib
+from sys import platform
 
 class File():
     
-    def __init__(self, path, platform, force_run_spice_if_fail=False):
+    def __init__(self, path, force_run_spice_if_fail=False):
         
         self.path = path
         self.platform = platform
@@ -63,6 +64,9 @@ class File():
         
     def load_yaml(self):
         return yaml_interface.load_yaml(self.path)
+    
+    def write(self):
+        raise NotImplementedError
     
     def hash(self):
 

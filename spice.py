@@ -251,8 +251,8 @@ noise_sources:
             
                 yaml_interface.write_lib(LIB_FILE, lib_content)
 
-    log_file = File(filepath + filename + ".log", platform, force_run_spice_if_fail=f"{filepath}{filename}.{file_extension}")
-    def_file = File(DAEMON_DEF_FILE, platform)
+    log_file = File(filepath + filename + ".log", force_run_spice_if_fail=f"{filepath}{filename}.{file_extension}")
+    def_file = File(DAEMON_DEF_FILE)
 
     if args.daemon:
         
