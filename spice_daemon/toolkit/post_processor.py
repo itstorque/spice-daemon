@@ -3,9 +3,11 @@ import matplotlib.pyplot as plt
 
 class PostProcessor:
     
-    def __init__(self) -> None:
+    def __init__(self, parent, params, **kwargs) -> None:
         # self.path is set inside the loop in spice.py
-        pass
+        
+        self.parent = parent
+        self.params = params
     
     def setup(self):    
         # modify tran command

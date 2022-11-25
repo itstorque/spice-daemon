@@ -90,18 +90,19 @@ class Simulation():
         
         for name in params:
         
-            module = eval(f"sd.modules.{module_type}()")
+            module = eval(f"sd.modules.{module_type}(parent=self)")
             
             module.load_data(name, params[name])
             
             self.add_module(module)
+        
+    def add_toolkit_from_def(self, toolkit_type, params):
+        
+        for name in params:
+        
+            toolkit = eval(f"sd.toolkit.{toolkit_type}(parent=self, params=params[name])")
             
-            print(self.modules)
-        
-    def add_toolkit_from_def(self, name, params):
-        
-        # generator = eval(key + "()")
-        pass
+            self.add_toolkit(toolkit)
         
     def add_from_def_file(self):
         

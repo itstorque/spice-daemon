@@ -9,13 +9,11 @@ from PyLTSpice.LTSpice_RawWrite import Trace, LTSpiceRawWrite as ltwrite
 
 class PSD(sdt.PostProcessorPlot):
     
-    def __init__(self, path, params) -> None:
-        self.path = path
-        self.params = params
+    def __init__(self, *args, **kwargs) -> None:
         
         self.X = 0
         
-        super().__init__()
+        super().__init__(*args, **kwargs)
     
     def plot(self):
         

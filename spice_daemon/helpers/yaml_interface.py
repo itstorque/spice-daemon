@@ -7,12 +7,15 @@ import re
 '''
 Functions for interacting with the yaml specification files
 '''
-
+# TODO: move this to modules/__init__.py probably...
 class Element():
     '''
     Interface defining some necessary functions each 
     SPICE element needs to implement differently
     '''
+    
+    def __init__(self, parent):
+        self.parent = parent
     
     def generate_asy_content(self, filepath, filename, params):
         pass 

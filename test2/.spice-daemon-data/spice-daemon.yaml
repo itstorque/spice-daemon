@@ -1,7 +1,7 @@
 # THIS IS A SPICE-DAEMON YAML FILE
 
 sim:
-  T: 10e-9 # simulation end time
+  T: 20e-9 # simulation end time
   STEPS: 100000 # number of simulation steps
   # Enter any other circuit parameters you want to use. e.g.
   L: 1 # you can put an inductor and set its inductance to \{L\} and it would be 1H
@@ -40,3 +40,4 @@ toolkits:
     out: "pcr_outa"
     trace: "I(R9)"
     gui: true
+    save_to: false

@@ -1,5 +1,5 @@
 sim:
-  T: 10e-9
+  T: 20e-9
   STEPS: 100000
 modules:
   noise_sources:
