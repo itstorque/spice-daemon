@@ -1,6 +1,7 @@
 import os
 import hashlib
 from sys import platform
+from pathlib import Path
 
 import spice_daemon as sd
 import re
@@ -29,6 +30,9 @@ class File():
         # path is a Path object
         # Touch creates the file if it doesn't exist
         # force_run_spice_if_fail launches LTspice and opens the file
+        
+        if isinstance(path, str):
+            path = Path(path)
         
         self.path = path
         self.platform = platform

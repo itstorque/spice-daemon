@@ -1,8 +1,10 @@
 import spice_daemon as sd
 
-sim = sd.Simulation("./test2/init.asc", T=1, STEPS=1000)
+# sim = sd.Simulation("./test2/init2.asc")
 
-sim.setup()
+sim = sd.new("test2/testCreate.asc")
+
+# sim.setup()
 
 sim.launch_ltspice()
 
