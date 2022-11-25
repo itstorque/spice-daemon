@@ -1,0 +1,42 @@
+# THIS IS A SPICE-DAEMON YAML FILE
+
+sim:
+  T: 10e-9 # simulation end time
+  STEPS: 100000 # number of simulation steps
+  # Enter any other circuit parameters you want to use. e.g.
+  L: 1 # you can put an inductor and set its inductance to \{L\} and it would be 1H
+  
+modules:
+  # all the spice-daemon elements you want to add from spice-daemon into LTspice
+  # they will be accessible from the LTspice components menu. 
+  # Check under the components defined in your local directory not LTspice
+
+  # To create two spice-daemon elements you can access in LTspice
+  # put the type under modules (make sure to not have two separate noise_source entries)
+  noise_sources:
+  
+    # create a noise_source called 'my_noise_source_1' with the following params
+    my_noisy_source_1:
+      source_type: voltage
+      noise:
+        type: gaussian
+        mean: 0
+        std: 2
+       
+    # create another noise source with a different name 
+    another_noisy_source:
+      source_type: current
+      noise:
+        type: gaussian
+        mean: 0
+        std: 2
+      
+toolkits:
+  # toolkits are python side computations such as postprocessing data,
+  # generating a matplotlib plot that accompanies your circuit or generating
+  # tables for LTspice. Everything that isn't an LTspice component.
+  
+  PSD:
+    out: "pcr_outa"
+    trace: "I(R9)"
+    gui: true

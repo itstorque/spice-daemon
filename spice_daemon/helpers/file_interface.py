@@ -6,11 +6,17 @@ import spice_daemon as sd
 
 class File():
     
-    def __init__(self, path, force_run_spice_if_fail=False):
+    def __init__(self, path, touch=False, force_run_spice_if_fail=False):
+        # path is a Path object
+        # Touch creates the file if it doesn't exist
+        # force_run_spice_if_fail launches LTspice and opens the file
         
         self.path = path
         self.platform = platform
         self.force_run_spice_if_fail = force_run_spice_if_fail
+        
+        if touch:
+            self.path.touch(exist_ok=True)
         
         self.last_change_time = self.check_force_run_spice()
         
@@ -66,9 +72,6 @@ class File():
     def load_yaml(self):
         return sd.helpers.load_yaml(self.path)
     
-    def write(self):
-        raise NotImplementedError
-    
     def hash(self):
 
         h = hashlib.sha1()
@@ -81,3 +84,62 @@ class File():
                 h.update(chunk)
                 
         return h.hexdigest()
+    
+    def encode(self, *args, **kwargs):
+        # Used for LTspice circuits with weird encodings...
+        # Caches the encoding while sd is running.
+        
+        # first call, runs get_encoding_function and uses that
+        # after that encode is the encoded function
+        self.encode = self.get_encoding_function()
+        self.encode(*args, **kwargs)
+    
+    # Helpers for LTspice files
+    def get_encoding_function(self):
+        
+        filedata = None
+    
+        with open(self.path, 'rb') as f:
+            filedata = f.read()
+    
+        if 'Version'.encode('utf_16_le') in filedata[:20]:
+            double_size = True
+        elif 'Version'.encode('utf_8') in filedata[:20]:
+            double_size = False
+        else:
+            raise Exception("Error reading asc file")
+        
+        def encode(bytes): 
+            
+            if double_size:
+                
+                encoded = b''
+                
+                for i in range(0, len(bytes)):
+                    k = bytearray(b'\x000')
+                    k[1] = bytes[i]
+                    encoded += k
+                    
+                return encoded[1:]
+            
+            else:
+                
+                return bytes
+            
+        return encode
+    
+    def read_bytes(self):
+        # read raw bytes of file
+    
+        with open(self.path, 'rb') as f:
+            return f.read()
+    
+    def write_bytes(self, data):
+        
+        with open(self.path, 'wb') as f:
+            f.write(data)
+    
+    def write(self, data):
+        
+        with open(self.path, 'w+') as f:
+            f.write(data)
