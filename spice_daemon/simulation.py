@@ -1,5 +1,8 @@
 import numpy as np
+
 from pathlib import Path
+import os
+from sys import platform
 
 # from file_interface import File
 import spice_daemon as sd
@@ -56,6 +59,10 @@ class Simulation():
         
     def module_separate_filename(self, name, ext):
         return self.daemon_files / ("module_" + name + "." + ext)
+    
+    # sim files
+    
+    ## tran file
         
     def update_tran_file(self):
         # Generates a tran file "trancmd.txt" in daemon_loc
@@ -72,6 +79,8 @@ class Simulation():
             contents += f".option {key} {value}\n"
         
         return self.tran_file.write(contents)
+    
+    ## lib file
     
     def append_lib(self, lib_content):
         self.lib_buffer += lib_content
@@ -93,14 +102,19 @@ class Simulation():
     def process_toolkits(self):
         raise NotImplementedError
     
+    # Adding toolkits and modules
+    
     def add_module(self, module):
         
         if not isinstance(module, sd.modules.Module):
             raise TypeError
         
+        module.generate_asy()
+        
         self.modules.add(module)
     
     def add_toolkit(self, toolkit):
+        # TODO: add toolkit type and checking...
         self.toolkits.add(toolkit)
         
     def clear_modules(self):
@@ -108,6 +122,8 @@ class Simulation():
         
     def clear_toolkits(self):
         self.toolkits = set()
+        
+    ## Add from yaml
         
     def add_module_from_def(self, module_type, params):
         
@@ -269,3 +285,17 @@ toolkits:
         self.def_file = sd.helpers.File( self.daemon_files / "spice-daemon.yaml", touch=True )
         
         self.def_file.write(default_yaml_file_content)
+        
+    # other
+    
+    def launch_ltspice(self):
+            
+        if platform == "darwin":
+            os.system(f"/Applications/LTspice.app/Contents/MacOS/LTspice -b {str(self.circuit_path.resolve())} & open " + str(self.circuit_path.resolve()))
+            
+        else:
+            
+            print("Could not find log file.")
+            print("Make sure that the supplied file exists and make sure it is launched.")
+            
+            raise FileNotFoundError
