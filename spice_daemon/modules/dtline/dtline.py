@@ -1,5 +1,3 @@
-from helpers.yaml_interface import *
-
 import sys
 
 import numpy as np
@@ -8,9 +6,11 @@ from enum import Enum
 from scipy import constants
 from scipy.interpolate import interp1d
 
+from spice_daemon.modules import Module
+
 sys.path.insert(0, os.path.dirname(os.path.realpath(__file__)) + "/tapers_source")
 
-class dtline(Element):
+class dtline(Module):
     
     def generate_asy_content(self, LIB_FILE, name):
         

@@ -1,8 +1,9 @@
-from helpers.yaml_interface import *
 import numpy as np
 import colorednoise as cn
 
-class noise_sources(Element):
+from spice_daemon.modules import Module
+
+class noise_sources(Module):
     
     def generate_asy_content(self, LIB_FILE, name):
         
@@ -41,41 +42,41 @@ PINATTR PinName out
 PINATTR SpiceOrder 2
 """
 
-    def lib_generator(self, NOISE_FILE_DEST_PREAMBLE):#, name, source_symbol="V"):
+    def lib_generator(self):#, name, source_symbol="V"):
         
         source_symbol = "v" if self.data['source_type'] == "voltage" else "i"
     
         return f""".subckt {self.name} in out
 
 ** NOISE SOURCE **
-{source_symbol} out in PWL file={NOISE_FILE_DEST_PREAMBLE}{self.name}.csv
+{source_symbol} out in PWL file={self.parent.module_separate_filename(self.name, '.csv')}
 
 .ends {self.name}
 
 """
         
-    def update_PWL_file(self, NOISE_FILE_DEST_PREAMBLE, t):
+    def update_PWL_file(self):
                 
         noise_data = self.data["noise"]
         
         if noise_data["type"] == "gaussian":
             
-            noise = np.random.normal(noise_data["mean"], noise_data["std"], len(t))
+            noise = np.random.normal(noise_data["mean"], noise_data["std"], self.parent.STEPS)
             
         elif noise_data["type"] == "poisson":
             
-            noise = noise_data["scale"] * np.random.poisson(noise_data["lambda"], len(t))
+            noise = noise_data["scale"] * np.random.poisson(noise_data["lambda"], self.parent.STEPS)
             
         elif noise_data["type"] == "one_over_f":
             
-            noise = noise_data["scale"] * cn.powerlaw_psd_gaussian(noise_data["power"], len(t), fmin=noise_data["fmin"])
+            noise = noise_data["scale"] * cn.powerlaw_psd_gaussian(noise_data["power"], self.parent.STEPS, fmin=noise_data["fmin"])
             
         elif noise_data["type"] == "custom":
             
             # This definition is not redundant. `.yaml` file can define
             # custom expressions that generate noise for N steps
             # and this needs to be defined here for the eval command.
-            N = len(t)
+            N = self.parent.STEPS
         
             noise = eval(noise_data["command"])
         
@@ -83,4 +84,4 @@ PINATTR SpiceOrder 2
             print("Wrong noise type defined in .yaml file")
             raise TypeError
         
-        return self.save_noise(NOISE_FILE_DEST_PREAMBLE, noise, t)
+        return self.save_noise(noise)

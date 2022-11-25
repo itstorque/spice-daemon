@@ -1,6 +1,6 @@
-from helpers.yaml_interface import *
+from spice_daemon.modules import Module
 
-class snspi(Element):
+class snspi(Module):
     def generate_asy_content(self, filepath, filename, params=None):
         pass 
 

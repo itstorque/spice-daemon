@@ -5,3 +5,5 @@ _*.net
 *_input.csv
 __pycache__
 *.fft
+.vscode
+*.csv
