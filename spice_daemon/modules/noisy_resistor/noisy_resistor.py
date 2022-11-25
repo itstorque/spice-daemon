@@ -55,10 +55,10 @@ R B temp {self.data["resistance"]}
 
 """
     
-    def update_PWL_file(self, NOISE_FILE_DEST_PREAMBLE, t):
+    def update_PWL_file(self):
         
         vn = np.sqrt(4 * constants.k * self.data["temperature"] * self.data["resistance"] * self.data["bandwidth"])
         
-        noise = np.random.normal(0, vn, len(t))
+        noise = np.random.normal(0, vn, self.STEPS)
         
-        return self.save_noise(NOISE_FILE_DEST_PREAMBLE, noise, t)
+        return self.save_noise(noise)

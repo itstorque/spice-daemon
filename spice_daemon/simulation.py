@@ -1,3 +1,4 @@
+import numpy as np
 from pathlib import Path
 
 # from file_interface import File
@@ -11,6 +12,8 @@ class Simulation():
         
         self.T     = T
         self.STEPS = STEPS
+        
+        self.t = np.linspace(0, T, STEPS)
         
         self.params     = params
         self.opt_params = opt_params
@@ -141,9 +144,11 @@ class Simulation():
                     
                     if entry == "STEPS":
                         self.STEPS = value
+                        self.t = np.linspace(0, self.T, self.STEPS)
                         
                     elif entry == "T":
                         self.T = value
+                        self.t = np.linspace(0, self.T, self.STEPS)
                         
                     elif entry in self.OPT_CODES:
                         self.opt_params[entry] = value
@@ -165,8 +170,9 @@ class Simulation():
     # Component updates
     
     def update_components(self):
-        pass
-        # TODO: implement this.
+        
+        for module in self.modules:
+            module.update_PWL_file()
                 
     # Updating Queues Helpers
         
@@ -182,6 +188,8 @@ class Simulation():
             self.add_from_def_file()
             
             self.regenerate_lib_file()
+            
+        self.update_components()
         
     def run_watchdog(self):
         if self.watchdog and self.watchdog.is_running(): return

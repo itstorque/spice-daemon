@@ -6,3 +6,4 @@ _*.net
 __pycache__
 *.fft
 .vscode
+*.csv

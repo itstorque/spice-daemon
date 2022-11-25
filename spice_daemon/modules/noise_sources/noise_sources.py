@@ -55,28 +55,28 @@ PINATTR SpiceOrder 2
 
 """
         
-    def update_PWL_file(self, t):
+    def update_PWL_file(self):
                 
         noise_data = self.data["noise"]
         
         if noise_data["type"] == "gaussian":
             
-            noise = np.random.normal(noise_data["mean"], noise_data["std"], len(t))
+            noise = np.random.normal(noise_data["mean"], noise_data["std"], self.parent.STEPS)
             
         elif noise_data["type"] == "poisson":
             
-            noise = noise_data["scale"] * np.random.poisson(noise_data["lambda"], len(t))
+            noise = noise_data["scale"] * np.random.poisson(noise_data["lambda"], self.parent.STEPS)
             
         elif noise_data["type"] == "one_over_f":
             
-            noise = noise_data["scale"] * cn.powerlaw_psd_gaussian(noise_data["power"], len(t), fmin=noise_data["fmin"])
+            noise = noise_data["scale"] * cn.powerlaw_psd_gaussian(noise_data["power"], self.parent.STEPS, fmin=noise_data["fmin"])
             
         elif noise_data["type"] == "custom":
             
             # This definition is not redundant. `.yaml` file can define
             # custom expressions that generate noise for N steps
             # and this needs to be defined here for the eval command.
-            N = len(t)
+            N = self.parent.STEPS
         
             noise = eval(noise_data["command"])
         
@@ -84,4 +84,4 @@ PINATTR SpiceOrder 2
             print("Wrong noise type defined in .yaml file")
             raise TypeError
         
-        return self.save_noise(noise, t)
+        return self.save_noise(noise)

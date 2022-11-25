@@ -22,15 +22,15 @@ class Module():
         self.name = name
         self.data = data
         
-    def save_noise(self, noise, t):
+    def save_noise(self, noise):
 
-        with open(self.parent.module_separate_filename(self.name, '.csv'), "w") as f:
+        with open(self.parent.module_separate_filename(self.name, 'csv'), "w") as f:
         
             # set initial noise to zero to have a consistent DC operating point
             noise[0] = 0
 
-            for i in range(0,len(t)):
-                f.write("{:E}\t{:E}\n".format( t[i], noise[i] ))
+            for i in range(0,len(self.parent.t)):
+                f.write("{:E}\t{:E}\n".format( self.parent.t[i], noise[i] ))
                 
             f.close()
             
