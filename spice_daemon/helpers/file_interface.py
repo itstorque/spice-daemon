@@ -9,11 +9,9 @@ import yaml
 
 class File():
     
-    # CUSTOM YAML LOADER
-    # 
+    ### CUSTOM YAML LOADER ###
     # by default, loader doesn't accept 1e5, need 1.e+5...
     # This implies + and .
-
     yaml_loader = yaml.SafeLoader
     yaml_loader.add_implicit_resolver(
             u'tag:yaml.org,2002:float',
@@ -74,7 +72,8 @@ class File():
         
         return False
     
-    def check_force_run_spice(self, tolerate=True): # TODO: this doesn't belong here
+    # TODO: this doesn't belong here
+    def check_force_run_spice(self, tolerate=True): 
         # return last mod time if working
         
         if self.force_run_spice_if_fail==False: return

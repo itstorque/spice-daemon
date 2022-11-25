@@ -38,7 +38,12 @@ def new(path):
 
 class Simulation():
     
-    OPT_CODES = {"reltol", "abstol"} # TODO: finish this!!
+    # see https://ltwiki.org/LTspiceHelp/LTspiceHelp/_OPTIONS_Set_simulator_options.htm
+    OPT_CODES = {"reltol", "abstol", "baudrate", "chgtol", "cshunt", "cshuntintern", "defad", "defas", "defl", "delay", "fastaccess", 
+                 "flagloads", "Gmin", "gminsteps", "gshunt", "itl1", "itl2", "itl4", "itl6", "srcsteps", "maxclocks", "maxstep", 
+                 "meascplxfmt", "measdgt", "method", "minclocks", "MinDeltaGmin", "nomarch", "noopiter", "numdgt", "pivrel", "pivtol", 
+                 "srcstepmethod", "temp", "tnom", "topologycheck", "trtol", "trytocompact", "vntol", "plotreltol", "plotvntol", 
+                 "plotabstol", "plotwinsize", "ptrantau", "ptranmax"}
     
     def __init__(self, circuit_path, T=0, STEPS=0, params={}, opt_params={"reltol": 1e-6}, daemon_folder_loc=None, watchdog_delay=1):
         
@@ -146,7 +151,10 @@ class Simulation():
         self.modules.add(module)
     
     def add_toolkit(self, toolkit):
-        # TODO: add toolkit type and checking...
+        
+        if not isinstance(toolkit, sd.toolkit.Toolkit):
+            raise TypeError
+        
         self.toolkits.add(toolkit)
         
     def clear_modules(self):

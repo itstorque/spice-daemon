@@ -1,11 +1,11 @@
 from PyLTSpice.LTSpice_RawRead import LTSpiceRawRead as read_raw
 import matplotlib.pyplot as plt
 
-class PostProcessor:
+from spice_daemon.toolkit import Toolkit
+
+class PostProcessor(Toolkit):
     
     def __init__(self, parent, params, **kwargs) -> None:
-        # self.path is set inside the loop in spice.py
-        
         self.parent = parent
         self.params = params
     
