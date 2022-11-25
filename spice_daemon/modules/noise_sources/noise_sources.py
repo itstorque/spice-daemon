@@ -49,7 +49,7 @@ PINATTR SpiceOrder 2
         return f""".subckt {self.name} in out
 
 ** NOISE SOURCE **
-{source_symbol} out in PWL file={self.parent.module_separate_filename(self.name, '.csv')}
+{source_symbol} out in PWL file={self.parent.module_separate_filename(self.name, 'csv')}
 
 .ends {self.name}
 

@@ -42,6 +42,9 @@ class File():
         self.last_change_time = 0 if self.last_change_time == None else self.last_change_time
         
         self.last_hash = self.hash()
+        
+    def get_path(self):
+        return str(self.path.resolve())
     
     def last_modified(self):
         
@@ -67,7 +70,7 @@ class File():
         
         return False
     
-    def check_force_run_spice(self, tolerate=True):
+    def check_force_run_spice(self, tolerate=True): # TODO: this doesn't belong here
         # return last mod time if working
         
         if self.force_run_spice_if_fail==False: return

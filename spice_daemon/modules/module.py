@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+import spice_daemon.helpers as sdh
+
 class Module():
     '''
     Interface defining some necessary functions each 
@@ -8,8 +10,9 @@ class Module():
     
     def __init__(self, parent):
         self.parent = parent
+        self.name = None
     
-    def generate_asy_content(self, filepath, filename, params):
+    def generate_asy_content(self, LIB_FILE, name):
         pass 
 
     def lib_generator(self, *args, **kwargs):
@@ -17,6 +20,18 @@ class Module():
     
     def update_PWL_file(self, *args, **kwargs):
         pass
+    
+    def generate_asy(self):
+        
+        if self.name == None: 
+            print("In generate_asy: Module has no name")
+            raise NameError()
+        
+        content = self.generate_asy_content(str(self.parent.lib_file.get_path()), self.name)
+        
+        asy_file = sdh.File(self.parent.circuit_loc / (self.name + ".asy"), touch=True)
+        
+        asy_file.write(content)
     
     def load_data(self, name, data):
         self.name = name
