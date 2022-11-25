@@ -30,9 +30,9 @@ class Element():
         self.name = name
         self.data = data
         
-    def save_noise(self, NOISE_FILE_DEST_PREAMBLE, noise, t):
+    def save_noise(self, noise, t):
 
-        with open(NOISE_FILE_DEST_PREAMBLE + self.name + ".csv", "w") as f:
+        with open(self.parent.module_separate_filename(self.name, '.csv'), "w") as f:
         
             # set initial noise to zero to have a consistent DC operating point
             noise[0] = 0
@@ -44,6 +44,8 @@ class Element():
             
     def newline_join(self, s1, s2): 
         return s1 + "\n" + s2
+
+# TODO: dump all these into the file interface...
 
 def write_yaml(noise_source_dict, dest):
 

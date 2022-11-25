@@ -42,20 +42,20 @@ PINATTR PinName out
 PINATTR SpiceOrder 2
 """
 
-    def lib_generator(self, NOISE_FILE_DEST_PREAMBLE):#, name, source_symbol="V"):
+    def lib_generator(self):#, name, source_symbol="V"):
         
         source_symbol = "v" if self.data['source_type'] == "voltage" else "i"
     
         return f""".subckt {self.name} in out
 
 ** NOISE SOURCE **
-{source_symbol} out in PWL file={NOISE_FILE_DEST_PREAMBLE}{self.name}.csv
+{source_symbol} out in PWL file={self.parent.module_separate_filename(self.name, '.csv')}
 
 .ends {self.name}
 
 """
         
-    def update_PWL_file(self, NOISE_FILE_DEST_PREAMBLE, t):
+    def update_PWL_file(self, t):
                 
         noise_data = self.data["noise"]
         
@@ -84,4 +84,4 @@ PINATTR SpiceOrder 2
             print("Wrong noise type defined in .yaml file")
             raise TypeError
         
-        return self.save_noise(NOISE_FILE_DEST_PREAMBLE, noise, t)
+        return self.save_noise(noise, t)

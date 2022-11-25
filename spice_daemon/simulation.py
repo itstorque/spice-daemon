@@ -31,6 +31,7 @@ class Simulation():
         self.daemon_files.mkdir(exist_ok=True)
         
         self.tran_file = sd.helpers.File(self.daemon_files / "trancmd.txt", touch=True)
+        self.lib_file = sd.helpers.File(self.daemon_files / "spice-daemon.lib", touch=True)
         
         self.modules = set()
         self.toolkits = set()
@@ -48,6 +49,11 @@ class Simulation():
         self.watch_files = {self.log_file, self.def_file}
         self.watchdog = None
         
+        self.lib_buffer = ""
+        
+    def module_separate_filename(self, name, ext):
+        return self.daemon_files / ("module_" + name + "." + ext)
+        
     def update_tran_file(self):
         # Generates a tran file "trancmd.txt" in daemon_loc
         
@@ -63,6 +69,20 @@ class Simulation():
             contents += f".option {key} {value}\n"
         
         return self.tran_file.write(contents)
+    
+    def append_lib(self, lib_content):
+        self.lib_buffer += lib_content
+    
+    def generate_lib(self):
+        self.lib_file.write(self.lib_buffer)
+        self.lib_buffer = ""
+        
+    def regenerate_lib_file(self):
+        
+        for module in self.modules:
+            self.append_lib(module.lib_generator())
+            
+        return self.generate_lib()
     
     def generate_modules(self):
         raise NotImplementedError
@@ -141,6 +161,14 @@ class Simulation():
                     
                 else:
                     raise KeyError
+                
+    # Component updates
+    
+    def update_components(self):
+        pass
+        # TODO: implement this.
+                
+    # Updating Queues Helpers
         
     def on_update(self, changed):
         print("UPDATE", changed)
@@ -152,6 +180,8 @@ class Simulation():
             self.clear_toolkits()
             
             self.add_from_def_file()
+            
+            self.regenerate_lib_file()
         
     def run_watchdog(self):
         if self.watchdog and self.watchdog.is_running(): return
@@ -159,6 +189,8 @@ class Simulation():
         self.watchdog = sd.helpers.WatchDog(self.watch_files, self.on_update, delay=self.watchdog_delay)
         
         self.watchdog.watch()
+        
+    # SETUP
         
     def setup_tran_statement(self):
         
@@ -181,8 +213,6 @@ class Simulation():
             49, 50, 32, 50, 10]))
         
         self.circuit_file.write_bytes(data)
-        
-    # SETUP
     
     def create_yaml_file(self):
         

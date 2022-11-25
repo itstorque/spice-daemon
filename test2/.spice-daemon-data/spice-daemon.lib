@@ -1,0 +1,14 @@
+.subckt my_noisy_source_1 in out
+
+** NOISE SOURCE **
+v out in PWL file=/Users/torque/programs/spice-daemon/test2/.spice-daemon-data/module_my_noisy_source_1..csv
+
+.ends my_noisy_source_1
+
+.subckt another_noisy_source in out
+
+** NOISE SOURCE **
+i out in PWL file=/Users/torque/programs/spice-daemon/test2/.spice-daemon-data/module_another_noisy_source..csv
+
+.ends another_noisy_source
+
