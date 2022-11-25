@@ -115,7 +115,7 @@ class File():
         # first call, runs get_encoding_function and uses that
         # after that encode is the encoded function
         self.encode = self.get_encoding_function()
-        self.encode(*args, **kwargs)
+        return self.encode(*args, **kwargs)
     
     # Helpers for LTspice files
     def get_encoding_function(self):
