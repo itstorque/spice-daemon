@@ -6,11 +6,11 @@ from enum import Enum
 from scipy import constants
 from scipy.interpolate import interp1d
 
-import spice_daemon.helpers as sdh
+from spice_daemon.modules import Module
 
 sys.path.insert(0, os.path.dirname(os.path.realpath(__file__)) + "/tapers_source")
 
-class dtline(sdh.Element):
+class dtline(Module):
     
     def generate_asy_content(self, LIB_FILE, name):
         

@@ -1,9 +1,9 @@
 import numpy as np
 import colorednoise as cn
 
-import spice_daemon.helpers as sdh
+from spice_daemon.modules import Module
 
-class noise_sources(sdh.Element):
+class noise_sources(Module):
     
     def generate_asy_content(self, LIB_FILE, name):
         

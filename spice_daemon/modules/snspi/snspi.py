@@ -1,6 +1,6 @@
-import spice_daemon.helpers as sdh
+from spice_daemon.modules import Module
 
-class snspi(sdh.Element):
+class snspi(Module):
     def generate_asy_content(self, filepath, filename, params=None):
         pass 
 

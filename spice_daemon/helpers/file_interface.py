@@ -3,8 +3,27 @@ import hashlib
 from sys import platform
 
 import spice_daemon as sd
+import re
+import yaml
 
 class File():
+    
+    # CUSTOM YAML LOADER
+    # 
+    # by default, loader doesn't accept 1e5, need 1.e+5...
+    # This implies + and .
+
+    yaml_loader = yaml.SafeLoader
+    yaml_loader.add_implicit_resolver(
+            u'tag:yaml.org,2002:float',
+            re.compile(u'''^(?:
+            [-+]?(?:[0-9][0-9_]*)\\.[0-9_]*(?:[eE][-+]?[0-9]+)?
+            |[-+]?(?:[0-9][0-9_]*)(?:[eE][-+]?[0-9]+)
+            |\\.[0-9_]+(?:[eE][-+][0-9]+)?
+            |[-+]?[0-9][0-9_]*(?::[0-5]?[0-9])+\\.[0-9_]*
+            |[-+]?\\.(?:inf|Inf|INF)
+            |\\.(?:nan|NaN|NAN))$''', re.X),
+            list(u'-+0123456789.'))
     
     def __init__(self, path, touch=False, force_run_spice_if_fail=False):
         # path is a Path object
@@ -70,7 +89,8 @@ class File():
                 raise FileNotFoundError
         
     def load_yaml(self):
-        return sd.helpers.load_yaml(self.path)
+        with open(self.path, 'r') as file:
+            return yaml.load(file, Loader=self.yaml_loader)
     
     def hash(self):
 

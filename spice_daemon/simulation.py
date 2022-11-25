@@ -92,7 +92,7 @@ class Simulation():
     
     def add_module(self, module):
         
-        if not isinstance(module, sd.helpers.Element):
+        if not isinstance(module, sd.modules.Module):
             raise TypeError
         
         self.modules.add(module)

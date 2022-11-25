@@ -1,3 +1,5 @@
+from .module import *
+
 from .noise_sources.noise_sources import *
 from .snspi.snspi import *
 from .taper.taper import *
