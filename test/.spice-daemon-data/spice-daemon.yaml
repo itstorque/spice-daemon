@@ -1,32 +1,66 @@
 sim:
-  T: 20e-9
+  T: 10e-9
   STEPS: 100000
-noise_sources:
-  noise_source_1:
-    source_type: current
-    noise:
-      type: gaussian
-      mean: 0
-      std: 2 # 1e-9
-taper:
-  taper_1:
-    type: klopf
-    num_units: 1000
-    Zlow: 50
-    Zhigh: 1000
-    Fc: 500
-    klopf_op_band_ripple: -20
-    z_file: /Users/torque/programs/spice-daemon/modules/taper/tapers_source/sonnet_csvs/Z_60pH-g=3.csv
-    eps_file: /Users/torque/programs/spice-daemon/modules/taper/tapers_source/sonnet_csvs/eEff_60pH-g=3.csv
-noisy_resistor:
-  johnson_res_1:
-    resistance: 50
-    temperature: 1
-    bandwidth: 50e9
-dtline:
-  dtline_1:
-postprocessing:
+modules:
+  noise_sources:
+    noise_source_1:
+      source_type: current
+      noise:
+        type: gaussian
+        mean: 0
+        std: 2 # 1e-9
+  # taper:
+  #   taper_1:
+  #     type: klopf
+  #     num_units: 1000
+  #     Zlow: 50
+  #     Zhigh: 1000
+  #     Fc: 500
+  #     klopf_op_band_ripple: -20
+  #     z_file: /Users/torque/programs/spice-daemon/modules/taper/tapers_source/sonnet_csvs/Z_60pH-g=3.csv
+  #     eps_file: /Users/torque/programs/spice-daemon/modules/taper/tapers_source/sonnet_csvs/eEff_60pH-g=3.csv
+  noisy_resistor:
+    johnson_res_1:
+      resistance: 50
+      temperature: 1
+      bandwidth: 50e9
+  # dtline:
+  #   dtline_1:
+toolkit:
   PSD:
     out: "pcr_outa"
     trace: "I(R9)"
     gui: true
+
+# sim:
+#   T: 10e-9
+#   STEPS: 100000
+# noise_sources:
+#   noise_source_1:
+#     source_type: current
+#     noise:
+#       type: gaussian
+#       mean: 0
+#       std: 2 # 1e-9
+# taper:
+#   taper_1:
+#     type: klopf
+#     num_units: 1000
+#     Zlow: 50
+#     Zhigh: 1000
+#     Fc: 500
+#     klopf_op_band_ripple: -20
+#     z_file: /Users/torque/programs/spice-daemon/modules/taper/tapers_source/sonnet_csvs/Z_60pH-g=3.csv
+#     eps_file: /Users/torque/programs/spice-daemon/modules/taper/tapers_source/sonnet_csvs/eEff_60pH-g=3.csv
+# noisy_resistor:
+#   johnson_res_1:
+#     resistance: 50
+#     temperature: 1
+#     bandwidth: 50e9
+# dtline:
+#   dtline_1:
+# postprocessing:
+#   PSD:
+#     out: "pcr_outa"
+#     trace: "I(R9)"
+#     gui: true

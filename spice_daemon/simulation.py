@@ -5,13 +5,17 @@ import spice_daemon as sd
 
 class Simulation():
     
-    def __init__(self, circuit_path, T, STEPS, params={}, opt_params={"reltol": 1e-6}, daemon_folder_loc=None):
+    OPT_CODES = {"reltol", "abstol"} # TODO: finish this!!
+    
+    def __init__(self, circuit_path, T=0, STEPS=0, params={}, opt_params={"reltol": 1e-6}, daemon_folder_loc=None, watchdog_delay=1):
         
         self.T     = T
         self.STEPS = STEPS
         
         self.params     = params
         self.opt_params = opt_params
+        
+        self.watchdog_delay = watchdog_delay
         
         self.circuit_path = Path(circuit_path)
         self.circuit_loc = self.circuit_path.parent.resolve()
@@ -60,17 +64,90 @@ class Simulation():
         raise NotImplementedError
     
     def add_module(self, module):
+        
+        if not isinstance(module, sd.helpers.Element):
+            raise TypeError
+        
         self.modules.add(module)
     
     def add_toolkit(self, toolkit):
         self.toolkits.add(toolkit)
         
-    def on_update(self):
-        print("UPDATE")
+    def clear_modules(self):
+        self.modules = set()
+        
+    def clear_toolkits(self):
+        self.toolkits = set()
+        
+    def add_module_from_def(self, module_type, params):
+        
+        for name in params:
+        
+            module = eval(f"sd.modules.{module_type}()")
+            
+            module.load_data(name, params[name])
+            
+            self.add_module(module)
+            
+            print(self.modules)
+        
+    def add_toolkit_from_def(self, name, params):
+        
+        # generator = eval(key + "()")
+        pass
+        
+    def add_from_def_file(self):
+        
+        source_data = self.def_file.load_yaml()
+        
+        for type in source_data.keys():
+            
+            for entry in source_data[type].keys():
+                
+                value = source_data[type][entry]
+            
+                if type == "sim":
+                    
+                    # self.STEPS = source_data["sim"]["STEPS"]
+                    # self.T = source_data["sim"]["T"]
+                    
+                    if entry == "STEPS":
+                        self.STEPS = value
+                        
+                    elif entry == "T":
+                        self.T = value
+                        
+                    elif entry in self.OPT_CODES:
+                        self.opt_params[entry] = value
+                        
+                    else:
+                        self.params[entry] = value
+                    
+                elif type == "modules":
+                    
+                    self.add_module_from_def(entry, value)
+                    
+                elif type == "toolkit":
+
+                    self.add_toolkit_from_def(entry, value)
+                    
+                else:
+                    raise KeyError
+        
+    def on_update(self, changed):
+        print("UPDATE", changed)
+        
+        if self.def_file in changed:
+            # reimport modules and toolkits
+            
+            self.clear_modules()
+            self.clear_toolkits()
+            
+            self.add_from_def_file()
         
     def run_watchdog(self):
         if self.watchdog and self.watchdog.is_running(): return
         
-        self.watchdog = sd.helpers.WatchDog(self.watch_files, self.on_update)
+        self.watchdog = sd.helpers.WatchDog(self.watch_files, self.on_update, delay=self.watchdog_delay)
         
         self.watchdog.watch()

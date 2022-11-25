@@ -1,9 +1,8 @@
-from helpers.yaml_interface import *
 import numpy as np
 import colorednoise as cn
 from scipy import constants
 
-from modules.noise_sources.noise_sources import *
+from spice_daemon.modules import noise_sources
 
 class noisy_resistor(noise_sources):
     
