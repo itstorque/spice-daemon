@@ -1,4 +1,4 @@
-from toolkit.post_processor import PostProcessorPlot
+import spice_daemon.toolkit as sdt
 
 import matplotlib.pyplot as plt
 
@@ -7,7 +7,7 @@ import numpy as np
 
 from PyLTSpice.LTSpice_RawWrite import Trace, LTSpiceRawWrite as ltwrite
 
-class PSD(PostProcessorPlot):
+class PSD(sdt.PostProcessorPlot):
     
     def __init__(self, path, params) -> None:
         self.path = path

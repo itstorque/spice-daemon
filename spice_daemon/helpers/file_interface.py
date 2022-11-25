@@ -1,7 +1,8 @@
 import os
-from helpers import yaml_interface
 import hashlib
 from sys import platform
+
+import spice_daemon as sd
 
 class File():
     
@@ -63,7 +64,7 @@ class File():
                 raise FileNotFoundError
         
     def load_yaml(self):
-        return yaml_interface.load_yaml(self.path)
+        return sd.helpers.load_yaml(self.path)
     
     def write(self):
         raise NotImplementedError

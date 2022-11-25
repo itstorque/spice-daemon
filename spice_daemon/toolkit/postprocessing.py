@@ -1,5 +1,4 @@
-from toolkit.psd import *
-from toolkit.post_processor import *
+import spice_daemon.toolkit as sdt
 
 class postprocessing():
     PNR = 1
@@ -10,7 +9,7 @@ class postprocessing():
         if type=="PSD":
             print("INIT PCR CALL")
             
-            PSD(self.path, param).plot()
+            sdt.PSD(self.path, param).plot()
         
         else:
             print("Invalid postprocessing with type " + type)

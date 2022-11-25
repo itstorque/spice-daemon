@@ -1,6 +1,6 @@
-from toolkit.post_processor import *
+import spice_daemon.toolkit as sdt
 
-class IVCurve(PostProcessorPlot):
+class IVCurve(sdt.PostProcessorPlot):
     
     def __init__(self) -> None:
         super().__init__()
