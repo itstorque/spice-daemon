@@ -89,7 +89,7 @@ class Simulation():
             self.create_yaml_file()
         
         # WatchDog watches files in self.watch_files for changes and runs a function whenever they are modified
-        self.watch_files = {self.log_file, self.def_file}
+        self.watch_files = {self.log_file, self.def_file, self.circuit_file}
         self.watchdog = None
         
         self.lib_buffer = ""
@@ -163,7 +163,7 @@ class Simulation():
     def clear_toolkits(self):
         self.toolkits = set()
         
-    ## Add from yaml
+    ## Add from yaml or circuit
         
     def add_module_from_def(self, module_type, params):
         

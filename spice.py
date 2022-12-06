@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import spice_daemon as sd
 
 # sim = sd.Simulation("./test2/init2.asc")

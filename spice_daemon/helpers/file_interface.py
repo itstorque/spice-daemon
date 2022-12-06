@@ -154,6 +154,14 @@ class File():
             
         return encode
     
+    def read(self):
+        
+        bytes = self.read_bytes()
+        
+        bytes = str(bytes).replace("\\x00", "")
+        
+        return str(bytes).split("\\n")
+    
     def read_bytes(self):
         # read raw bytes of file
     
