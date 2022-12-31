@@ -35,7 +35,7 @@ class snspi(Module):
             if i+1 in photon_locations.keys(): 
                 PHOTON_LOC = f"PHOTON{i}"
                 k=0
-                for t in photon_locations[i+1].split(","):
+                for t in str(photon_locations[i+1]).split(","):
                     k+=1
                     t=float(t)
                     lib += Element.photon_spike(f"{k}_at_{i}", PHOTON_LOC, t)
