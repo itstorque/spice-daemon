@@ -1,0 +1,5 @@
+change_me:
+  component_name:
+    example_param_1: "EXAMPLE_VAL_1"
+    example_param_2: 250.12 # example val 2
+    example_param_3: 1e-12 # example val 3

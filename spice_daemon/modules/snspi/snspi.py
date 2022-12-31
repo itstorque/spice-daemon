@@ -1,44 +1,74 @@
-from spice_daemon.modules import Module
+import sys
+
+import numpy as np
+from enum import Enum
+
+from spice_daemon.modules import Module, Element
 
 class snspi(Module):
-    def generate_asy_content(self, filepath, filename, params=None):
-        pass 
+    
+    PINS = ["N0", "OUT"]
+    
+    def update_PWL_file(self):
+        return None
+    
+    def lib_code(self, lib="", LC=None):
+        # example vars from yaml file: - these are stored in self.data['num_units']
+            # num_units: 1000
+            # L: 10e-7
+            # C: 8e-9
+            # ic: 20
+            # incident_photons:
+            #   30: 20e-9, 100e-9
+            #   60: 10e-9
+            
+        N = self.data['num_units']
+        photon_locations = self.data['incident_photons']
+        ic, Lind = self.data["ic"], self.data["L"]
+        Cap = self.data["C"]
+        
+        for i in range(N):
+            
+            # if there is a photon coming on this wire, one of the terminals is attached to
+            # a non-linear source
+            PHOTON_LOC = 0
+            if i+1 in photon_locations.keys(): 
+                PHOTON_LOC = f"PHOTON{i}"
+                k=0
+                for t in photon_locations[i+1].split(","):
+                    k+=1
+                    t=float(t)
+                    lib += Element.photon_spike(f"{k}_at_{i}", PHOTON_LOC, t)
+                
+            left_node, right_node = f"N{i}", f"N{i+1}" if i+1!=N else "OUT"
 
-    def lib_generator(self, name, params):
-        phase_velocity = params['phase_velocity'] # speed of light in material [m/s]
-        length = params['length'] # total length of device [m]
-        num_pixels = params['num_pixels'] # number of discrete pixels in device
-        snpsd_params = params['snspd_params'] # SNSPD parameters (see generate_pixels)
-
-        lib_string = f""".subckt {name} t1 t2
-*** SNSPI Definition ***
-R1 t1 bv1 50
-R2 t2 bv2 50
+            lib += Element.nanowire(i, left_node, right_node, PHOTON_LOC, 0, ic, Lind) # spice code to hook nanowire between nodes i and i+1... photon inputs at PHOTONi and ground
+            lib += Element.capacitor(i, left_node, 0, Cap)
+            
+        # terminate with cap to ground
+        lib += Element.capacitor(N, "OUT", 0, Cap)
+            
+        return lib
+    
+    def generate_asy_content(self, LIB_FILE, name):
+        # return symbol file text
+        
+        DESCRIPTION = f"Empty symbol for class {self.__class__.__name__}"
+        
+        return f"""Version 4
+SymbolType CELL
+LINE Normal 0 80 0 72
+LINE Normal 0 0 0 8
+CIRCLE Normal -32 8 32 72
+TEXT 0 40 Center 0 {name}
+SYMATTR Prefix X
+SYMATTR Description {DESCRIPTION}
+SYMATTR SpiceModel {name}
+SYMATTR ModelFile {LIB_FILE}
+PIN 0 0 NONE 8
+PINATTR PinName in
+PINATTR SpiceOrder 1
+PIN 0 80 NONE 8
+PINATTR PinName out
+PINATTR SpiceOrder 2
 """
-        nodes_per_pixel = 2
-        for pixel in range(num_pixels):
-            node1 = pixel*nodes_per_pixel
-            node2 = pixel*nodes_per_pixel + 1
-            name = 'SNSPD'+str(pixel)
-            snspd_statement = self.generate_pixels(snpsd_params, node1, node2, name='XU'+str(pixel))
-            ibias = f""" """
-
-    def generate_pixels(self, params, node1, node2, name):
-        Lind = params['Lind'] # kinetic inductance of NW [H]
-        width = params['width'] # width of NW [m]
-        thickness = params['thickness'] # thickness of film [m]
-        sheetRes = params['sheetRes'] # normal sheet resistance [ohms]
-        Tc = params['Tc'] # transition temp [K]
-        Tsub = params['Tsub'] # operating substrate temp [K]
-        Jc = params['Jc'] # critical current density [A]
-        C = params['C'] # constriction factor
-
-        gate_name = 'SNSPI'+str(node1).zfill(5)
-        source_name = 'SNSPI'+str(node2).zfill(5)
-
-        snspd_string = f"""{name} {gate_name} 0 {source_name} 0 nanowireDynamic 
-+ Lind={Lind} width={width} thickness={thickness}
-+ sheetRes={sheetRes} Tc={Tc} Tsub={Tsub} Jc={Jc}
-+ C={C}"""
-
-        return snspd_string

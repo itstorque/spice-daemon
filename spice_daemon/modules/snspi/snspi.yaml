@@ -1,16 +1,9 @@
 snspi:
-  snspi_1:
-    element_type: snpsi
-    parameters:
-      phase_velocity: 0.05*3E8
-      length: 100E-6
-      num_pixels: 100
-      snspd_params:
-        Lind: 100E-9
-        width: 100E-9
-        thickness: 4E-9
-        sheetRes: 400
-        Tc: 10.5
-        Tsub: 2
-        Jc: 50E9
-        C: 1
+  my_snspi:
+    num_units: 1000
+    L: 10e-7
+    C: 8e-9
+    ic: 20
+    incident_photons: # loc: times
+      30: [20e-9, 100e-9]
+      60: [10e-9]

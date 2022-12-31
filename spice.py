@@ -2,9 +2,11 @@
 
 import spice_daemon as sd
 
+# sd.Simulation("")
+
 # sim = sd.Simulation("./test2/init2.asc")
 
-sim = sd.new("test2/testCreate.asc")
+sim = sd.new("snspi_test.asc")
 
 # sim.setup()
 

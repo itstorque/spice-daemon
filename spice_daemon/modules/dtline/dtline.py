@@ -12,6 +12,8 @@ sys.path.insert(0, os.path.dirname(os.path.realpath(__file__)) + "/tapers_source
 
 class dtline(Module):
     
+    PINS = ["Zlow", "Zhigh"]
+    
     def generate_asy_content(self, LIB_FILE, name):
         
         return f"""Version 4
@@ -33,21 +35,8 @@ PINATTR SpiceOrder 1
 PIN 0 32 NONE 0
 PINATTR PinName B
 PINATTR SpiceOrder 2"""
-
-    def lib_generator(self, NOISE_FILE_DEST_PREAMBLE):
-        
-        # TODO: remove resistance of L, C
-        
-        lib = self.newline_join(f".subckt {self.name} Zlow Zhigh", "** TAPER **")
-        
-        # LC = self.generate_taper(self.data["Zlow"], self.data["Zhigh"], type=self.data["type"])
-        # LC = [ [L0, L1, ...] , [C0, C1, ...] ]
-        
-        lib = self._lib_generator_helper(lib)
-
-        return self.newline_join(lib, f".ends {self.name}\n\n")
     
-    def _lib_generator_helper(self, lib, LC=None):
+    def lib_code(self, lib, LC=None):
         
         node_number = 0
         

@@ -84,4 +84,4 @@ PINATTR SpiceOrder 2
             print("Wrong noise type defined in .yaml file")
             raise TypeError
         
-        return self.save_noise(noise)
+        return self.save_pwl(noise)

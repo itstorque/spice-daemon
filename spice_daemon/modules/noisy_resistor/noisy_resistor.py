@@ -61,4 +61,4 @@ R B temp {self.data["resistance"]}
         
         noise = np.random.normal(0, vn, self.STEPS)
         
-        return self.save_noise(noise)
+        return self.save_pwl(noise)
