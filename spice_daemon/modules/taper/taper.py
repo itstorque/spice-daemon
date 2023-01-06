@@ -9,9 +9,9 @@ from scipy.interpolate import interp1d
 
 # sys.path.insert(0, os.path.dirname(os.path.realpath(__file__)) + "/tapers_source")
 
-# from taper_helpers.erickson_taper import length, erickson_polynomial_z
-# from taper_helpers.klopfenstein_taper import klop_length, klopfenstein_z
-# from taper_helpers.taper_library import *
+# from .tapers_source.taper_helpers.erickson_taper import length, erickson_polynomial_z
+from .tapers_source.taper_helpers.klopfenstein_taper import klop_length, klopfenstein_z
+from .tapers_source.taper_helpers.taper_library import *
 
 from spice_daemon.modules import dtline
 
@@ -44,15 +44,13 @@ PIN -48 0 NONE 8
 PINATTR PinName out
 PINATTR SpiceOrder 2"""
 
-    def lib_generator(self, NOISE_FILE_DEST_PREAMBLE):
+    def lib_code(self, lib=""):
         
         # TODO: remove resistance of L, C
         
-        lib = self.newline_join(f".subckt {self.name} Zlow Zhigh", "** TAPER **")
-        
         LC = self.generate_taper(self.data["Zlow"], self.data["Zhigh"], type=self.data["type"])
         
-        return self._lib_generator_helper(lib, LC=LC)
+        return super().lib_code(lib, LC=LC)
 
     def generate_taper(self, Zin, Zout, type="klopf"):
         
@@ -115,8 +113,5 @@ PINATTR SpiceOrder 2"""
         
         L = Z_target / v_target / self.data['num_units']
         C = 1 / (Z_target * v_target) / self.data['num_units']
-        
-        print("WOOT")
-        print(L, C)
         
         return L, C
