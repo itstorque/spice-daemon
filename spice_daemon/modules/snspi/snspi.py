@@ -49,26 +49,3 @@ class snspi(Module):
         lib += Element.capacitor(N, "OUT", 0, Cap)
             
         return lib
-    
-    def generate_asy_content(self, LIB_FILE, name):
-        # return symbol file text
-        
-        DESCRIPTION = f"Empty symbol for class {self.__class__.__name__}"
-        
-        return f"""Version 4
-SymbolType CELL
-LINE Normal 0 80 0 72
-LINE Normal 0 0 0 8
-CIRCLE Normal -32 8 32 72
-TEXT 0 40 Center 0 {name}
-SYMATTR Prefix X
-SYMATTR Description {DESCRIPTION}
-SYMATTR SpiceModel {name}
-SYMATTR ModelFile {LIB_FILE}
-PIN 0 0 NONE 8
-PINATTR PinName in
-PINATTR SpiceOrder 1
-PIN 0 80 NONE 8
-PINATTR PinName out
-PINATTR SpiceOrder 2
-"""

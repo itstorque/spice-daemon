@@ -11,9 +11,9 @@ class Element():
         return f"C{name} {port1} {port2} {value}\n"
     
     def nanowire(name, port1, port2, photon_in, photon_out, ic, Lind):
-        # TODO: implement ic and Lind.
+        # TODO: implement ic -> Isw is weird, need to make sure its ok to just reset it
         # NOTE: `.lib snspd.lib` is included to make this run
-        return f"XU{name} {photon_in} {photon_out} {port1} {port2} nanowireDynamic\n.lib snspd.lib\n"
+        return f"XU{name} {photon_in} {photon_out} {port1} {port2} nanowireDynamic Lind={Lind}\n.lib snspd.lib\n"
     
     def photon_spike(name, node, time):
         return Element.source(f"photon_{name}", "i", node, 0, f"PULSE(0 1u {time} 1p 1p 1p)")
@@ -77,6 +77,31 @@ class Module():
         asy_file = sdh.File(self.parent.circuit_loc / (self.name + ".asy"), touch=True)
         
         asy_file.write(content)
+    
+    def generate_asy_content(self, LIB_FILE, name):
+        # [Default] return symbol file text
+        
+        DESCRIPTION = f"Empty symbol for class {self.__class__.__name__}"
+        
+        return f"""Version 4
+SymbolType CELL
+LINE Normal 80 0 72 0
+LINE Normal 0 0 8 0
+RECTANGLE Normal 8 -8 72 8
+TEXT 0 -12 Center 0 {self.PINS[0]}
+TEXT 80 -12 Center 0 {self.PINS[1]}
+TEXT 40 0 Center 0 {name}
+SYMATTR Prefix X
+SYMATTR Description {DESCRIPTION}
+SYMATTR SpiceModel {name}
+SYMATTR ModelFile {LIB_FILE}
+PIN 0 0 NONE 8
+PINATTR PinName {self.PINS[0]}
+PINATTR SpiceOrder 1
+PIN 80 0 NONE 8
+PINATTR PinName {self.PINS[1]}
+PINATTR SpiceOrder 2
+"""
     
     def load_data(self, name, data):
         self.name = name

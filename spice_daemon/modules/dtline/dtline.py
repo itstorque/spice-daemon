@@ -15,29 +15,29 @@ class dtline(Module):
     
     PINS = ["Zlow", "Zhigh"]
     
-    def generate_asy_content(self, LIB_FILE, name):
+#     def generate_asy_content(self, LIB_FILE, name):
         
-        return f"""Version 4
-SymbolType CELL
-LINE Normal 5 32 0 32
-LINE Normal 80 32 72 32
-LINE Normal 71 20 8 20
-LINE Normal 71 44 8 44
-CIRCLE Normal 5 44 10 20
-CIRCLE Normal 69 44 74 20
-WINDOW 0 70 72 Right 2
-SYMATTR Prefix X
-SYMATTR Description Taper Z={self.data["Z"]} t={self.data["t"]} L={self.data["L"]} C={self.data["C"]}
-SYMATTR SpiceModel {name}
-SYMATTR ModelFile {LIB_FILE}
-PIN 80 32 NONE 0
-PINATTR PinName A
-PINATTR SpiceOrder 1
-PIN 0 32 NONE 0
-PINATTR PinName B
-PINATTR SpiceOrder 2"""
+#         return f"""Version 4
+# SymbolType CELL
+# LINE Normal 5 32 0 32
+# LINE Normal 80 32 72 32
+# LINE Normal 71 20 8 20
+# LINE Normal 71 44 8 44
+# CIRCLE Normal 5 44 10 20
+# CIRCLE Normal 69 44 74 20
+# WINDOW 0 70 72 Right 2
+# SYMATTR Prefix X
+# SYMATTR Description Taper Z={self.data["Z"]} t={self.data["t"]} L={self.data["L"]} C={self.data["C"]}
+# SYMATTR SpiceModel {name}
+# SYMATTR ModelFile {LIB_FILE}
+# PIN 80 32 NONE 0
+# PINATTR PinName A
+# PINATTR SpiceOrder 1
+# PIN 0 32 NONE 0
+# PINATTR PinName B
+# PINATTR SpiceOrder 2"""
     
-    def lib_code(self, lib, LC=None):
+    def lib_code(self, lib="", LC=None):
         
         node_number = 0
         
