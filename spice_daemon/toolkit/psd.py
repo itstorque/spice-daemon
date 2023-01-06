@@ -3,6 +3,7 @@ import spice_daemon.toolkit as sdt
 import matplotlib.pyplot as plt
 
 from scipy.signal import welch
+import scipy.fftpack
 import numpy as np
 
 from PyLTSpice.LTSpice_RawWrite import Trace, LTSpiceRawWrite as ltwrite
@@ -17,19 +18,46 @@ class PSD(sdt.PostProcessorPlot):
     
     def plot(self):
         
-        t, X = self.read(self.params["trace"])
+        print(">>>>", self.params)
         
+        print(self.read(self.params["trace"]))
+        
+        tp, Xp = self.read(self.params["trace"])
+        
+        # print(tp)
+        
+        N=100_000
+        
+        t = np.linspace(tp[0], tp[-1]*100, N)
+        
+        print(t)
+        
+        # X = np.sin(20e6 * 2.0*np.pi*t)#
+        X = np.interp(t, tp, Xp)
+        
+        # plt.plot(t, X)
+        
+        # yf = scipy.fftpack.fft(X)
+        # xf = np.linspace(0.0, 1.0/(t[1]-t[0]), N//2)
+
         plt.clf()
+        # plt.plot(xf, 2.0/N * np.abs(yf[:N//2]))
+
         
-        # plt.psd(X, figure=self.fig)
+        # plt.clf()
         
-        # super().plot()
-        
-        f, Y = welch(X)
-        
-        plt.plot(f, Y)
+        plt.psd(X, Fs=1/(t[1]-t[0]), figure=self.fig, sides="twosided")
+        # F = 1000e6
+        # plt.xlim([-F, F])
         
         super().plot()
+        
+        
+        # f, Y = welch(X)
+        
+        # plt.plot(f, Y)
+        
+        # super().plot()
         
         # f = Trace("frequency", f)
         # Y = Trace("N001", Y)

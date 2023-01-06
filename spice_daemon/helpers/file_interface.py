@@ -72,6 +72,9 @@ class File():
         
         return False
     
+    def __str__(self):
+        return str(self.path)
+    
     # TODO: this doesn't belong here
     def check_force_run_spice(self, tolerate=True): 
         # return last mod time if working

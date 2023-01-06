@@ -19,7 +19,7 @@ class PostProcessor(Toolkit):
     
     def read(self, trace):
         
-        data = read_raw(self.path+".raw")
+        data = read_raw(str(self.path))
         
         # taking the absolute value of time because there is a negative sign randomly...
         # this is probably a bit encoding something for extrapolation? not sure tho...
@@ -36,8 +36,8 @@ class PostProcessorPlot(PostProcessor):
         
         self.fig = plt.figure(0)
         
-        plt.ion()
-        plt.show()
+        # plt.ion()
+        plt.show(block=False)
         
     def plot(self, *args, **kwargs):
         # self.fig.plot(*args, **kwargs)

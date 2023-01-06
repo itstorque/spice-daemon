@@ -137,7 +137,9 @@ class Simulation():
         raise NotImplementedError
         
     def process_toolkits(self):
-        raise NotImplementedError
+        
+        for toolkit in self.toolkits:
+            toolkit.plot()
     
     # Adding toolkits and modules
     
@@ -180,6 +182,8 @@ class Simulation():
         for name in params:
         
             toolkit = eval(f"sd.toolkit.{toolkit_type}(parent=self, params=params[name])")
+            
+            toolkit.path = sd.helpers.File( self.circuit_loc / (self.circuit_name + ".raw") )
             
             self.add_toolkit(toolkit)
         
@@ -247,6 +251,7 @@ class Simulation():
             
         self.update_tran_file()
         self.update_components()
+        self.process_toolkits()
         
     def run_watchdog(self):
         if self.watchdog and self.watchdog.is_running(): return
